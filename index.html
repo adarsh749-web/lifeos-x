@@ -1,15 +1,1529 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="LIFEOS X - Financial Life Simulator, What-If Engine, Business Lab, Goals, Family Planning and Financial Stress Testing.">
-  <meta name="keywords" content="financial simulator, life planner, budget planner, retirement calculator, financial planning">
-  <title>LIFEOS X — Financial Life Simulator</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LIFEOS X - Financial Digital Twin</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#03080d;
+    color:#f5f7fb;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+header{
+    height:75px;
+    background:#050b11;
+    border-bottom:1px solid #172432;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    font-size:19px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+
+.logo span{
+    color:#11d7f4;
+}
+
+.online{
+    color:#1df08a;
+    font-size:13px;
+}
+
+.container{
+    max-width:1290px;
+    margin:auto;
+    padding:15px 20px 80px;
+}
+
+nav{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:12px 0 25px;
+}
+
+nav a{
+    text-decoration:none;
+    color:#91a5c0;
+    background:#0a121d;
+    border:1px solid #1e2d40;
+    padding:13px 19px;
+    border-radius:30px;
+    white-space:nowrap;
+    cursor:pointer;
+}
+
+nav a:hover,
+nav a.active{
+    background:#15d6f3;
+    color:#001018;
+    border-color:#15d6f3;
+}
+
+section{
+    padding:40px 0;
+    scroll-margin-top:90px;
+}
+
+.eyebrow{
+    color:#11d7f4;
+    font-size:13px;
+    font-weight:bold;
+    letter-spacing:5px;
+    margin-bottom:25px;
+}
+
+h1{
+    font-size:38px;
+    margin-bottom:14px;
+}
+
+.description{
+    color:#8fa5c2;
+    font-size:17px;
+    line-height:1.6;
+    margin-bottom:25px;
+}
+
+.card{
+    background:linear-gradient(145deg,#0a131e,#071019);
+    border:1px solid #223247;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+label{
+    display:block;
+    color:#91a7c3;
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+input{
+    width:100%;
+    padding:16px;
+    border-radius:12px;
+    border:1px solid #2a3b50;
+    background:#121d29;
+    color:white;
+    font-size:16px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#12d8f5;
+}
+
+button{
+    border:none;
+    background:#13d5f2;
+    color:#001018;
+    padding:16px 23px;
+    border-radius:12px;
+    font-weight:900;
+    cursor:pointer;
+    margin-top:18px;
+}
+
+button:hover{
+    filter:brightness(1.1);
+}
+
+.hero{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:40px;
+    align-items:center;
+}
+
+.hero h1{
+    font-size:76px;
+    line-height:.98;
+}
+
+.cyan{
+    color:#12d8f5;
+}
+
+.green{
+    color:#18ed89;
+}
+
+.live-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.metric{
+    background:#111c28;
+    border:1px solid #24364b;
+    border-radius:18px;
+    padding:20px;
+}
+
+.metric small{
+    color:#8fa5c2;
+    letter-spacing:1px;
+}
+
+.metric strong{
+    display:block;
+    font-size:25px;
+    margin:14px 0 5px;
+}
+
+.status{
+    margin-top:18px;
+    background:#0b1722;
+    border:1px solid #26394e;
+    border-radius:18px;
+    padding:23px;
+}
+
+.status strong{
+    display:block;
+    font-size:28px;
+    margin:10px 0;
+}
+
+.timeline{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:13px;
+}
+
+.result{
+    display:none;
+    margin-top:20px;
+}
+
+.result.show{
+    display:block;
+}
+
+.result-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+}
+
+footer{
+    text-align:center;
+    color:#62758d;
+    border-top:1px solid #142230;
+    padding:25px;
+    font-size:12px;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+    header{
+        padding:0 15px;
+    }
+
+    .online{
+        display:none;
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+    }
+
+    .hero h1{
+        font-size:52px;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .live-grid{
+        grid-template-columns:1fr;
+    }
+
+    .timeline{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .result-grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
 </head>
+
+
 <body>
-<div id="app"></div>
-<script src="app.js"></script>
+
+<header>
+
+    <div class="logo">
+        LIFEOS <span>X</span>
+    </div>
+
+    <div class="online">
+        ● SIMULATION ENGINE ONLINE
+    </div>
+
+</header>
+
+
+<div class="container">
+
+<nav>
+
+<a href="#dashboard">Dashboard</a>
+<a href="#profile">Profile</a>
+<a href="#future">Future</a>
+<a href="#whatif">What-If</a>
+<a href="#business">Business</a>
+<a href="#goals">Goals</a>
+<a href="#family">Family</a>
+<a href="#stress">Stress Test</a>
+<a href="#debt">Debt</a>
+<a href="#fire">FIRE</a>
+<a href="#compare">Compare</a>
+
+</nav>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard">
+
+<div class="hero">
+
+<div>
+
+<div class="eyebrow">
+FINANCIAL DIGITAL TWIN
+</div>
+
+<h1>
+Know your
+<span class="cyan">future</span>
+before you live it.
+</h1>
+
+<p class="description">
+LIFEOS X converts your assumptions into age-by-age
+projections and lets you test hundreds of financial decisions.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>
+LIVE FINANCIAL MODEL.
+<span class="green">● LIVE</span>
+</h2>
+
+<br>
+
+<div class="live-grid">
+
+<div class="metric">
+<small>NET WORTH</small>
+<strong id="netWorth">₹0</strong>
+<span class="green">Debt free</span>
+</div>
+
+<div class="metric">
+<small>MONTHLY FLOW</small>
+<strong id="monthlyFlow">₹0</strong>
+<span class="green">Saving rate</span>
+</div>
+
+<div class="metric">
+<small>RETIREMENT</small>
+<strong>Age 60</strong>
+<span class="cyan">40 years runway</span>
+</div>
+
+</div>
+
+
+<div class="status">
+
+<small>MODEL STATUS</small>
+
+<strong class="green">
+Healthy cash flow
+</strong>
+
+<span id="statusText">
+Enter your financial details below.
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- PROFILE -->
+
+<section id="profile">
+
+<div class="eyebrow">
+LIFEOS X / PROFILE
+</div>
+
+<h1>
+Build Your Financial Digital Twin.
+</h1>
+
+<p class="description">
+Enter the assumptions used by every simulator.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Name</label>
+<input id="name" value="Adarsh">
+</div>
+
+<div>
+<label>Current Age</label>
+<input id="age" type="number" value="20">
+</div>
+
+<div>
+<label>Monthly Income ₹</label>
+<input id="income" type="number" value="2000">
+</div>
+
+<div>
+<label>Monthly Expense ₹</label>
+<input id="expense" type="number" value="1700">
+</div>
+
+<div>
+<label>Current Savings ₹</label>
+<input id="savings" type="number" value="0">
+</div>
+
+<div>
+<label>Total Debt ₹</label>
+<input id="totalDebt" type="number" value="0">
+</div>
+
+<div>
+<label>Expected Annual Return %</label>
+<input id="returnRate" type="number" value="10">
+</div>
+
+<div>
+<label>Inflation %</label>
+<input id="inflation" type="number" value="6">
+</div>
+
+</div>
+
+<button onclick="updateProfile()">
+UPDATE FINANCIAL MODEL →
+</button>
+
+</section>
+
+
+
+<!-- FUTURE -->
+
+<section id="future">
+
+<div class="eyebrow">
+LIFEOS X / FUTURE
+</div>
+
+<h1>Your Life Projection.</h1>
+
+<p class="description">
+Age-by-age model using income growth, inflation,
+investment returns and current cash flow.
+</p>
+
+
+<div class="card">
+
+<div class="timeline" id="timeline"></div>
+
+</div>
+
+</section>
+
+
+
+<!-- WHAT IF -->
+
+<section id="whatif">
+
+<div class="eyebrow">
+LIFEOS X / WHAT-IF
+</div>
+
+<h1>Change Your Future.</h1>
+
+<p class="description">
+Test income, expenses, inflation, investments,
+family shocks and lifestyle decisions together.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Income growth %</label>
+<input id="incomeGrowth" type="number" value="8">
+</div>
+
+<div>
+<label>Monthly expense ₹</label>
+<input id="whatExpense" type="number" value="1700">
+</div>
+
+<div>
+<label>Extra investment / month ₹</label>
+<input id="extraInvestment" type="number" value="5000">
+</div>
+
+<div>
+<label>Inflation %</label>
+<input id="whatInflation" type="number" value="6">
+</div>
+
+<div>
+<label>One-time business investment ₹</label>
+<input id="businessInvestment" type="number" value="0">
+</div>
+
+<div>
+<label>Emergency cost ₹</label>
+<input id="emergencyCost" type="number" value="0">
+</div>
+
+<div>
+<label>Target retirement age</label>
+<input id="retirementAge" type="number" value="60">
+</div>
+
+<div>
+<label>Extra income / month ₹</label>
+<input id="extraIncome" type="number" value="0">
+</div>
+
+<div>
+<label>Future children</label>
+<input id="futureChildren" type="number" value="0">
+</div>
+
+<div>
+<label>Education fund / child ₹</label>
+<input id="educationFund" type="number" value="1500000">
+</div>
+
+<div>
+<label>Home purchase ₹</label>
+<input id="homePurchase" type="number" value="0">
+</div>
+
+<div>
+<label>Annual insurance ₹</label>
+<input id="insurance" type="number" value="30000">
+</div>
+
+</div>
+
+<button onclick="runWhatIf()">
+SIMULATE 20+ VARIABLES →
+</button>
+
+
+<div id="whatResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- BUSINESS -->
+
+<section id="business">
+
+<div class="eyebrow">
+LIFEOS X / BUSINESS
+</div>
+
+<h1>Business Lab.</h1>
+
+<p class="description">
+Model startup capital, revenue growth, operating cost,
+taxes, reinvestment and business risk.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Starting capital ₹</label>
+<input id="startCapital" type="number" value="500000">
+</div>
+
+<div>
+<label>Monthly revenue ₹</label>
+<input id="monthlyRevenue" type="number" value="100000">
+</div>
+
+<div>
+<label>Monthly operating cost ₹</label>
+<input id="operatingCost" type="number" value="60000">
+</div>
+
+<div>
+<label>Revenue growth % / year</label>
+<input id="revenueGrowth" type="number" value="12">
+</div>
+
+<div>
+<label>Tax / other %</label>
+<input id="tax" type="number" value="20">
+</div>
+
+<div>
+<label>Business years</label>
+<input id="businessYears" type="number" value="10">
+</div>
+
+<div>
+<label>Reinvest profit %</label>
+<input id="reinvest" type="number" value="30">
+</div>
+
+<div>
+<label>Failure probability %</label>
+<input id="failure" type="number" value="10">
+</div>
+
+<div>
+<label>Personal monthly withdrawal ₹</label>
+<input id="withdrawal" type="number" value="30000">
+</div>
+
+<div>
+<label>Exit value multiple</label>
+<input id="multiple" type="number" value="4">
+</div>
+
+</div>
+
+<button onclick="runBusiness()">
+RUN BUSINESS MODEL →
+</button>
+
+<div id="businessResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- GOALS -->
+
+<section id="goals">
+
+<div class="eyebrow">
+LIFEOS X / GOALS
+</div>
+
+<h1>Goal Engine.</h1>
+
+<p class="description">
+House, education, wedding, travel, emergency fund,
+retirement and custom goals.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Target amount ₹</label>
+<input id="targetAmount" type="number" value="10000000">
+</div>
+
+<div>
+<label>Already invested ₹</label>
+<input id="alreadyInvested" type="number" value="100000">
+</div>
+
+<div>
+<label>Monthly contribution ₹</label>
+<input id="monthlyContribution" type="number" value="20000">
+</div>
+
+<div>
+<label>Expected return %</label>
+<input id="expectedReturn" type="number" value="12">
+</div>
+
+<div>
+<label>Target years</label>
+<input id="targetYears" type="number" value="10">
+</div>
+
+<div>
+<label>Goal inflation %</label>
+<input id="goalInflation" type="number" value="6">
+</div>
+
+</div>
+
+<button onclick="calculateGoal()">
+CALCULATE GOAL →
+</button>
+
+<div id="goalResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- FAMILY -->
+
+<section id="family">
+
+<div class="eyebrow">
+LIFEOS X / FAMILY
+</div>
+
+<h1>Family & Life Planner.</h1>
+
+<p class="description">
+Model children, education, healthcare, parents support,
+weddings and changing expenses across decades.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Number of children</label>
+<input id="children" type="number" value="2">
+</div>
+
+<div>
+<label>Education / child ₹</label>
+<input id="educationChild" type="number" value="1500000">
+</div>
+
+<div>
+<label>Wedding / child ₹</label>
+<input id="weddingChild" type="number" value="1000000">
+</div>
+
+<div>
+<label>Healthcare / year ₹</label>
+<input id="healthcare" type="number" value="100000">
+</div>
+
+<div>
+<label>Family monthly expense ₹</label>
+<input id="familyExpense" type="number" value="30000">
+</div>
+
+<div>
+<label>Parents support / month ₹</label>
+<input id="parentsSupport" type="number" value="10000">
+</div>
+
+<div>
+<label>Planning horizon years</label>
+<input id="familyYears" type="number" value="25">
+</div>
+
+<div>
+<label>Inflation %</label>
+<input id="familyInflation" type="number" value="6">
+</div>
+
+</div>
+
+<button onclick="buildFamily()">
+BUILD FAMILY MODEL →
+</button>
+
+<div id="familyResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- STRESS -->
+
+<section id="stress">
+
+<div class="eyebrow">
+LIFEOS X / STRESS TEST
+</div>
+
+<h1>Stress Test.</h1>
+
+<p class="description">
+Test unexpected income loss, emergency expenses
+and high inflation.
+</p>
+
+<div class="card">
+
+<button onclick="runStress()">
+RUN STRESS SCENARIO →
+</button>
+
+<div id="stressResult" class="result"></div>
+
+</div>
+
+</section>
+
+
+
+<!-- DEBT -->
+
+<section id="debt">
+
+<div class="eyebrow">
+LIFEOS X / DEBT
+</div>
+
+<h1>Debt Destroyer.</h1>
+
+<p class="description">
+Compare repayment strategies and estimate interest
+saved by accelerating debt.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Debt balance ₹</label>
+<input id="debtBalance" type="number" value="500000">
+</div>
+
+<div>
+<label>Interest %</label>
+<input id="debtInterest" type="number" value="12">
+</div>
+
+<div>
+<label>Monthly payment ₹</label>
+<input id="debtPayment" type="number" value="15000">
+</div>
+
+<div>
+<label>Extra payment ₹/month</label>
+<input id="extraDebt" type="number" value="5000">
+</div>
+
+<div>
+<label>Current remaining months</label>
+<input id="remainingMonths" type="number" value="60">
+</div>
+
+</div>
+
+<button onclick="destroyDebt()">
+COMPARE DEBT PLAN →
+</button>
+
+<div id="debtResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- FIRE -->
+
+<section id="fire">
+
+<div class="eyebrow">
+LIFEOS X / FIRE
+</div>
+
+<h1>FIRE Planner.</h1>
+
+<p class="description">
+Estimate a retirement corpus from spending,
+inflation and withdrawal assumptions.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Monthly spending ₹</label>
+<input id="fireSpending" type="number" value="50000">
+</div>
+
+<div>
+<label>Current corpus ₹</label>
+<input id="fireCorpus" type="number" value="0">
+</div>
+
+<div>
+<label>Years to retirement</label>
+<input id="fireYears" type="number" value="25">
+</div>
+
+<div>
+<label>Expected return %</label>
+<input id="fireReturn" type="number" value="10">
+</div>
+
+</div>
+
+<button onclick="calculateFire()">
+CALCULATE FIRE →
+</button>
+
+<div id="fireResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- COMPARE -->
+
+<section id="compare">
+
+<div class="eyebrow">
+LIFEOS X / COMPARE
+</div>
+
+<h1>Scenario Compare.</h1>
+
+<p class="description">
+Compare your current financial situation
+with an alternate scenario.
+</p>
+
+<div class="card">
+
+<button onclick="compareScenarios()">
+COMPARE SCENARIOS →
+</button>
+
+<div id="compareResult" class="result"></div>
+
+</div>
+
+</section>
+
+
+</div>
+
+
+<footer>
+LIFEOS X — personal financial simulation.
+Estimates are illustrative, not financial advice.
+</footer>
+
+
+
+<script>
+
+/* BASIC HELPERS */
+
+function value(id){
+    return Number(document.getElementById(id).value) || 0;
+}
+
+function money(number){
+    return "₹" + Math.round(number).toLocaleString("en-IN");
+}
+
+function show(id,html){
+    const element=document.getElementById(id);
+    element.innerHTML=html;
+    element.classList.add("show");
+}
+
+
+/* PROFILE */
+
+function updateProfile(){
+
+    const income=value("income");
+    const expense=value("expense");
+    const savings=value("savings");
+    const debt=value("totalDebt");
+
+    const flow=income-expense;
+
+    document.getElementById("netWorth").innerText=
+        money(savings-debt);
+
+    document.getElementById("monthlyFlow").innerText=
+        money(flow);
+
+    document.getElementById("statusText").innerText=
+        "Current age " + value("age") +
+        " · Income " + money(income) +
+        " · Expense " + money(expense);
+
+    createTimeline();
+
+    alert("Financial model updated!");
+}
+
+
+/* FUTURE PROJECTION */
+
+function createTimeline(){
+
+    const age=value("age") || 20;
+    const income=value("income");
+    const expense=value("expense");
+    const savings=value("savings");
+
+    const returnRate=value("returnRate")/100;
+    const growth=.08;
+
+    let html="";
+
+    [0,10,20,30,40].forEach(years=>{
+
+        let futureIncome=
+            income*Math.pow(1+growth,years);
+
+        let futureExpense=
+            expense*Math.pow(1+.06,years);
+
+        let yearlySaving=
+            Math.max(0,futureIncome-futureExpense)*12;
+
+        let projected=
+            savings*Math.pow(1+returnRate,years)
+            + yearlySaving*years;
+
+        html += `
+
+        <div class="metric">
+
+            <small>AGE ${age+years}</small>
+
+            <strong>
+                ${money(projected)}
+            </strong>
+
+            <span class="green">
+                Projected net worth
+            </span>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("timeline").innerHTML=html;
+}
+
+
+/* WHAT IF */
+
+function runWhatIf(){
+
+    const income=value("income");
+    const expense=value("whatExpense");
+
+    const extraInvestment=value("extraInvestment");
+    const extraIncome=value("extraIncome");
+
+    const business=value("businessInvestment");
+    const emergency=value("emergencyCost");
+
+    const children=value("futureChildren");
+    const education=value("educationFund");
+
+    const home=value("homePurchase");
+
+    const monthly=
+        income-expense+
+        extraIncome+
+        extraInvestment;
+
+    const tenYear=
+        monthly*12*10-
+        business-
+        emergency-
+        children*education-
+        home;
+
+    show("whatResult",`
+
+        <h2>What-If Result</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>MONTHLY EFFECT</small>
+                <strong>${money(monthly)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>10 YEAR MODEL</small>
+                <strong>${money(tenYear)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>RETIREMENT AGE</small>
+                <strong>${value("retirementAge")}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* BUSINESS */
+
+function runBusiness(){
+
+    let capital=value("startCapital");
+    let revenue=value("monthlyRevenue");
+    const cost=value("operatingCost");
+
+    const growth=value("revenueGrowth")/100;
+    const tax=value("tax")/100;
+    const years=value("businessYears");
+
+    let lastProfit=0;
+
+    for(let year=0;year<years;year++){
+
+        let profit=
+            (revenue-cost)*12;
+
+        profit=
+            profit*(1-tax);
+
+        lastProfit=profit;
+
+        capital += profit;
+
+        revenue=
+            revenue*(1+growth);
+    }
+
+    const exit=
+        lastProfit*value("multiple");
+
+    show("businessResult",`
+
+        <h2>Business Model Result</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>ENDING CAPITAL</small>
+                <strong>${money(capital)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>LAST YEAR PROFIT</small>
+                <strong>${money(lastProfit)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>ESTIMATED EXIT VALUE</small>
+                <strong>${money(exit)}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* GOAL */
+
+function calculateGoal(){
+
+    const target=value("targetAmount");
+    const invested=value("alreadyInvested");
+    const monthly=value("monthlyContribution");
+
+    const rate=value("expectedReturn")/1200;
+    const years=value("targetYears");
+
+    let future=
+
+        invested*
+        Math.pow(1+rate,years*12)
+
+        +
+
+        monthly*
+        (
+            (Math.pow(1+rate,years*12)-1)
+            /rate
+        );
+
+    const gap=
+        Math.max(0,target-future);
+
+    show("goalResult",`
+
+        <h2>Goal Projection</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>PROJECTED VALUE</small>
+                <strong>${money(future)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>TARGET</small>
+                <strong>${money(target)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>GAP</small>
+                <strong>${money(gap)}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* FAMILY */
+
+function buildFamily(){
+
+    const children=value("children");
+
+    const education=
+        value("educationChild");
+
+    const wedding=
+        value("weddingChild");
+
+    const healthcare=
+        value("healthcare");
+
+    const monthly=
+        value("familyExpense")+
+        value("parentsSupport");
+
+    const years=value("familyYears");
+
+    const basicChild=
+        children*(education+wedding);
+
+    const familySpend=
+        monthly*12*years;
+
+    const healthcareCost=
+        healthcare*years;
+
+    const total=
+        basicChild+
+        familySpend+
+        healthcareCost;
+
+    show("familyResult",`
+
+        <h2>Family Cost Projection</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>CHILDREN COST</small>
+                <strong>${money(basicChild)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>FAMILY SPENDING</small>
+                <strong>${money(familySpend)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>TOTAL MODEL</small>
+                <strong>${money(total)}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* STRESS TEST */
+
+function runStress(){
+
+    const income=value("income");
+
+    const stressIncome=
+        income*.6;
+
+    const expense=
+        value("expense")*1.2;
+
+    const monthly=
+        stressIncome-expense;
+
+    show("stressResult",`
+
+        <div class="status">
+
+            <small>STRESS SCENARIO</small>
+
+            <strong class="cyan">
+                ${monthly>=0 ? "Cash flow survives" : "Cash flow deficit"}
+            </strong>
+
+            <p class="description">
+                Income reduced by 40% and expenses increased by 20%.
+                Estimated monthly flow:
+                ${money(monthly)}
+            </p>
+
+        </div>
+
+    `);
+}
+
+
+/* DEBT */
+
+function destroyDebt(){
+
+    let balance=value("debtBalance");
+
+    const rate=
+        value("debtInterest")/1200;
+
+    const payment=
+        value("debtPayment")+
+        value("extraDebt");
+
+    let months=0;
+    let interest=0;
+
+    while(balance>0 && months<600){
+
+        const monthlyInterest=
+            balance*rate;
+
+        interest+=monthlyInterest;
+
+        balance=
+            balance+
+            monthlyInterest-
+            payment;
+
+        months++;
+
+    }
+
+    show("debtResult",`
+
+        <h2>Accelerated Debt Plan</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>PAYOFF TIME</small>
+                <strong>${months} months</strong>
+            </div>
+
+            <div class="metric">
+                <small>TOTAL INTEREST</small>
+                <strong>${money(interest)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>MONTHLY PAYMENT</small>
+                <strong>${money(payment)}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* FIRE */
+
+function calculateFire(){
+
+    const spending=
+        value("fireSpending")*12;
+
+    const years=
+        value("fireYears");
+
+    const returnRate=
+        value("fireReturn")/100;
+
+    const futureSpending=
+        spending*Math.pow(1.06,years);
+
+    const corpus=
+        futureSpending/.04;
+
+    const currentCorpus=
+        value("fireCorpus")*
+        Math.pow(1+returnRate,years);
+
+    show("fireResult",`
+
+        <h2>FIRE Projection</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>FUTURE ANNUAL SPENDING</small>
+                <strong>${money(futureSpending)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>ILLUSTRATIVE CORPUS</small>
+                <strong>${money(corpus)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>CURRENT CORPUS GROWTH</small>
+                <strong>${money(currentCorpus)}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* COMPARE */
+
+function compareScenarios(){
+
+    const income=
+        value("income");
+
+    const expense=
+        value("expense");
+
+    const base=
+        income-expense;
+
+    const alternate=
+        base+
+        value("extraInvestment");
+
+    show("compareResult",`
+
+        <div class="result-grid">
+
+            <div class="metric">
+
+                <small>BASELINE</small>
+
+                <strong>
+                    ${money(base)}
+                </strong>
+
+            </div>
+
+
+            <div class="metric">
+
+                <small>ALTERNATE</small>
+
+                <strong>
+                    ${money(alternate)}
+                </strong>
+
+            </div>
+
+
+            <div class="metric">
+
+                <small>DIFFERENCE</small>
+
+                <strong>
+                    ${money(alternate-base)}
+                </strong>
+
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* INITIAL LOAD */
+
+createTimeline();
+
+document.getElementById("netWorth").innerText=
+    money(value("savings")-value("totalDebt"));
+
+document.getElementById("monthlyFlow").innerText=
+    money(value("income")-value("expense"));
+
+</script>
+
 </body>
 </html>
