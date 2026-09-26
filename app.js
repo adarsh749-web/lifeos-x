@@ -1,117 +1,1240 @@
+const startButton = document.getElementById("startSimulation");
 
-const app=document.getElementById("app");
-const KEY="lifeos-x-profile";
-const defaultProfile={name:"Adarsh",age:20,income:50000,expense:25000,savings:250000,debt:0,returnRate:0.10,inflation:0.06,retirement:60,children:0,married:false};
-let P=JSON.parse(localStorage.getItem(KEY)||"null")||defaultProfile;
+const LIFEOS = {
+  profile: {},
+  projection: [],
+  goals: [],
+  business: {}
+};
 
-const money=n=>new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:0}).format(Number(n)||0);
-const short=n=>{n=Number(n)||0;let a=Math.abs(n);if(a>=1e7)return (n/1e7).toFixed(2)+" Cr";if(a>=1e5)return (n/1e5).toFixed(2)+" L";if(a>=1e3)return (n/1e3).toFixed(1)+"K";return Math.round(n).toString()};
-const val=id=>Number(document.getElementById(id)?.value)||0;
-const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
-function save(){localStorage.setItem(KEY,JSON.stringify(P));toast("Profile saved locally");}
-function toast(t){let x=document.createElement("div");x.className="toast";x.textContent=t;document.body.appendChild(x);setTimeout(()=>x.remove(),1800)}
-function field(id,label,value,type="number"){return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${esc(value)}"></div>`}
-function nav(active){return `<div class="nav">${["Dashboard","Profile","Future","What-If","Business","Goals","Family","Stress Test","Debt","FIRE","Compare"].map(x=>`<button class="${active===x?"active":""}" onclick="go('${x}')">${x}</button>`).join("")}</div>`}
-function shell(title,sub,body,active="Dashboard"){app.innerHTML=`<header class="top"><div class="brand">LIFEOS <span>X</span></div><div class="status">● SIMULATION ENGINE ONLINE</div></header><main class="wrap">${nav(active)}<div class="eyebrow">LIFEOS X / ${active.toUpperCase()}</div><h1>${title}</h1><p style="color:var(--muted)">${sub}</p>${body}<div class="footer">LIFEOS X — personal financial simulation. Estimates are illustrative, not financial advice.</div></main>`}
-function go(x){({Dashboard:dashboard,Profile:profile,Future:future,["What-If"]:whatif,Business:business,Goals:goals,Family:family,["Stress Test"]:stress,Debt:debt,FIRE:fire,Compare:compare}[x]||dashboard)()}
-
-function dashboard(){
- const monthly=P.income-P.expense, savingRate=P.income?monthly/P.income*100:0;
- shell("Simulate Your Financial Future.","A multi-scenario financial digital twin for income, spending, goals, family, business and unexpected events.",`
- <section class="hero" style="min-height:auto">
- <div><div class="eyebrow">FINANCIAL DIGITAL TWIN</div><h1>Know your <em>future</em> before you live it.</h1><p>LIFEOS X converts your assumptions into age-by-age projections and lets you test hundreds of financial decisions.</p><div class="actions"><button class="btn primary" onclick="profile()">Create / Edit Profile →</button><button class="btn" onclick="future()">Run Future Simulation</button></div></div>
- <div class="command"><h2>LIVE FINANCIAL MODEL <span class="status">● LIVE</span></h2><div class="metricgrid"><div class="metric"><small>Net Worth</small><strong>${money(P.savings-P.debt)}</strong><span class="${P.savings-P.debt>=0?"good":"bad"}">${P.debt?money(P.debt)+" debt":"Debt free"}</span></div><div class="metric"><small>Monthly Flow</small><strong>${money(monthly)}</strong><span class="${monthly>=0?"good":"bad"}">${savingRate.toFixed(0)}% saving rate</span></div><div class="metric"><small>Retirement</small><strong>Age ${P.retirement}</strong><span class="cyan">${P.retirement-P.age} years runway</span></div></div><div class="result"><small>MODEL STATUS</small><h3>${monthly>=0?"Healthy cash flow":"Cash-flow deficit"}</h3><p>Current age ${P.age} · Income ${money(P.income)} · Expense ${money(P.expense)}</p></div></div>
- </section>
- <section class="panel"><h2>Decision Command Center</h2><div class="cards">
- <div class="card"><small>Future</small><strong>Age timeline</strong><button class="btn" onclick="future()">Open →</button></div>
- <div class="card"><small>What-If</small><strong>50+ variables</strong><button class="btn" onclick="whatif()">Open →</button></div>
- <div class="card"><small>Business</small><strong>Business Lab</strong><button class="btn" onclick="business()">Open →</button></div>
- <div class="card"><small>Risk</small><strong>Stress Test</strong><button class="btn" onclick="stress()">Open →</button></div>
- </div></section>`);
-}
-function profile(){
-shell("Build Your Financial Digital Twin.","Enter the assumptions used by every simulator.",`
-<section class="panel"><div class="grid">
- ${field("pName","Name",P.name,"text")}${field("pAge","Current Age",P.age)}${field("pIncome","Monthly Income ₹",P.income)}${field("pExpense","Monthly Expense ₹",P.expense)}${field("pSavings","Current Savings ₹",P.savings)}${field("pDebt","Total Debt ₹",P.debt)}${field("pReturn","Expected Annual Return %",P.returnRate*100)}${field("pInflation","Inflation %",P.inflation*100)}${field("pRetire","Retirement Age",P.retirement)}${field("pChildren","Children",P.children)}
- <div class="field"><label>Marital Status</label><select id="pMarried"><option value="0" ${!P.married?"selected":""}>Single</option><option value="1" ${P.married?"selected":""}>Married</option></select></div></div>
- <div class="actions"><button class="btn primary" onclick="saveProfile()">SAVE DIGITAL TWIN</button><button class="btn" onclick="dashboard()">Cancel</button></div></section>`);
-}
-function saveProfile(){P={name:document.getElementById("pName").value,age:val("pAge"),income:val("pIncome"),expense:val("pExpense"),savings:val("pSavings"),debt:val("pDebt"),returnRate:val("pReturn")/100,inflation:val("pInflation")/100,retirement:val("pRetire"),children:val("pChildren"),married:val("pMarried")===1};save();dashboard()}
-
-function project(monthlyExtra=0,biz=0,emergency=0){
- let wealth=P.savings-P.debt, income=P.income, expense=P.expense, rows=[];
- for(let age=P.age;age<=P.retirement;age++){wealth=wealth*(1+P.returnRate)+(income-expense+monthlyExtra)*12+biz-emergency;rows.push({age,wealth,income,expense});income*=1+0.08;expense*=1+P.inflation}
- return rows;
-}
-function future(){
- const rows=project(), picks=[P.age,30,40,50,P.retirement].filter((x,i,a)=>x>=P.age&&a.indexOf(x)===i).map(age=>rows.find(r=>r.age===age)||rows.at(-1));
- shell("Your Life Projection.","Age-by-age model using income growth, inflation, investment returns and current cash flow.",`
- <section class="panel"><div class="cards">${picks.map(r=>`<div class="card"><small>AGE ${r.age}</small><strong>${short(r.wealth)}</strong><span class="${r.wealth>=0?"good":"bad"}">Projected net worth</span></div>`).join("")}</div></section>
- <section class="panel"><h2>Life Timeline</h2><div class="timeline">${[{a:P.age,t:"Career & wealth building"},{a:28,t:"Possible marriage / lifestyle expansion"},{a:32,t:"Possible home / family phase"},{a:35,t:"Children & education planning"},{a:45,t:"Peak earning + wealth acceleration"},{a:P.retirement,t:"Retirement independence target"}].filter(e=>e.a>=P.age).map(e=>`<div class="event"><b>Age ${e.a}</b><span>${e.t}</span></div>`).join("")}</div></section>
- <section class="panel"><h2>Projection Table</h2><table class="table"><tr><th>Age</th><th>Income / month</th><th>Expense / month</th><th>Net worth</th></tr>${rows.filter(r=>r.age%5===0||r.age===P.age||r.age===P.retirement).map(r=>`<tr><td>${r.age}</td><td>${money(r.income)}</td><td>${money(r.expense)}</td><td>${money(r.wealth)}</td></tr>`).join("")}</table></section>`);
+function money(n) {
+  return Math.round(Number(n) || 0).toLocaleString("en-IN");
 }
 
-function whatif(){
-shell("Change Your Future.","Test income, expenses, inflation, investments, family shocks, business and lifestyle decisions together.",`
-<section class="panel"><div class="grid">
- ${field("wGrowth","Income growth %",8)}${field("wExpense","Monthly expense ₹",P.expense)}${field("wInvestment","Extra investment / month ₹",5000)}${field("wInflation","Inflation %",P.inflation*100)}${field("wBusiness","One-time business investment ₹",0)}${field("wEmergency","Emergency cost ₹",0)}${field("wRetire","Target retirement age",P.retirement)}${field("wExtra","Extra income / month ₹",0)}${field("wChildren","Future children",P.children)}${field("wEducation","Education fund / child ₹",1500000)}${field("wHome","Home purchase ₹",0)}${field("wInsurance","Annual insurance ₹",30000)}</div><button class="btn primary" onclick="runWhatif()">SIMULATE 20+ VARIABLES →</button><div id="wi"></div></section>`);
-}
-function runWhatif(){
- let age=P.age,end=val("wRetire",60),wealth=P.savings-P.debt-val("wBusiness")-val("wHome"),income=P.income+val("wExtra"),expense=val("wExpense"),infl=val("wInflation",6)/100,growth=val("wGrowth",8)/100,invest=val("wInvestment"),childCost=val("wChildren")*val("wEducation");
- for(;age<=end;age++){let annual=(income-expense-invest)*12-val("wInsurance")-(age===P.age?val("wEmergency")+childCost:0);wealth=wealth*(1+P.returnRate)+annual+invest*12;income*=1+growth;expense*=1+infl}
- document.getElementById("wi").innerHTML=`<div class="result"><small>PROJECTED NET WORTH</small><h3>${money(wealth)}</h3><p>Scenario ends at age ${end}. Change any assumption and run again.</p></div>`;
+function shortMoney(n) {
+  n = Number(n) || 0;
+  const a = Math.abs(n);
+
+  if (a >= 10000000) return "₹" + (n / 10000000).toFixed(1) + " Cr";
+  if (a >= 100000) return "₹" + (n / 100000).toFixed(1) + " L";
+  if (a >= 1000) return "₹" + (n / 1000).toFixed(1) + "K";
+
+  return "₹" + Math.round(n);
 }
 
-function business(){
-shell("Business Lab.","Model startup capital, revenue growth, operating cost, taxes, reinvestment and business risk.",`
-<section class="panel"><div class="grid">${field("bCapital","Starting capital ₹",500000)}${field("bRevenue","Monthly revenue ₹",100000)}${field("bCost","Monthly operating cost ₹",60000)}${field("bGrowth","Revenue growth % / year",12)}${field("bTax","Tax / other %",20)}${field("bYears","Business years",10)}${field("bReinvest","Reinvest profit %",30)}${field("bRisk","Failure probability %",10)}${field("bPersonal","Personal monthly withdrawal ₹",30000)}${field("bExit","Exit value multiple",4)}</div><button class="btn primary" onclick="runBusiness()">RUN BUSINESS MODEL →</button><div id="biz"></div></section>`);
-}
-function runBusiness(){
- let rev=val("bRevenue"),cost=val("bCost"),capital=val("bCapital"),total=-capital;
- for(let y=1;y<=val("bYears",10);y++){let profit=Math.max(0,(rev-cost)*12)*(1-val("bTax",20)/100);total+=profit*(1-val("bReinvest",30)/100)-val("bPersonal")*12;rev*=1+val("bGrowth",12)/100}
- let adjusted=total*(1-val("bRisk",10)/100),exit=Math.max(0,rev-cost)*12*val("bExit",4);
- document.getElementById("biz").innerHTML=`<div class="result"><small>RISK-ADJUSTED BUSINESS VALUE</small><h3>${money(adjusted+exit)}</h3><p>Projected operating wealth ${money(adjusted)} + estimated exit value ${money(exit)}.</p></div>`;
+function get(id) {
+  return document.getElementById(id);
 }
 
-function goals(){
-shell("Goal Engine.","House, education, wedding, travel, emergency fund, retirement and custom goals.",`
-<section class="panel"><div class="grid">${field("gTarget","Target amount ₹",10000000)}${field("gCurrent","Already invested ₹",100000)}${field("gMonthly","Monthly contribution ₹",20000)}${field("gReturn","Expected return %",12)}${field("gYears","Target years",10)}${field("gInflation","Goal inflation %",6)}</div><button class="btn primary" onclick="runGoal()">CALCULATE GOAL →</button><div id="gr"></div></section>
-<section class="panel"><h2>Goal presets</h2><div class="cards"><div class="card">🏠 Home<br><button class="btn" onclick="presetGoal(5000000)">Use</button></div><div class="card">🎓 Education<br><button class="btn" onclick="presetGoal(3000000)">Use</button></div><div class="card">💍 Wedding<br><button class="btn" onclick="presetGoal(2000000)">Use</button></div><div class="card">✈️ Travel<br><button class="btn" onclick="presetGoal(500000)">Use</button></div></div></section>`);
+function val(id, fallback = 0) {
+  const e = get(id);
+  return e ? Number(e.value) || fallback : fallback;
 }
-function presetGoal(x){document.getElementById("gTarget").value=x;toast("Goal preset selected")}
-function runGoal(){let cur=val("gCurrent"),target=val("gTarget"),m=val("gMonthly"),r=val("gReturn",12)/100/12,n=val("gYears",10)*12;for(let i=0;i<n;i++)cur=cur*(1+r)+m;let pct=Math.min(100,cur/target*100);document.getElementById("gr").innerHTML=`<div class="result"><small>PROJECTED VALUE</small><h3>${money(cur)}</h3><div class="bar"><i style="width:${pct}%"></i></div><p>${pct.toFixed(1)}% of target after ${val("gYears")} years.</p></div>`}
 
-function family(){
-shell("Family & Life Planner.","Model children, education, healthcare, parents support, weddings and changing expenses across decades.",`
-<section class="panel"><div class="grid">${field("fChildren","Number of children",2)}${field("fEdu","Education / child ₹",1500000)}${field("fWedding","Wedding / child ₹",1000000)}${field("fHealth","Healthcare / year ₹",100000)}${field("fFamily","Family monthly expense ₹",30000)}${field("fParents","Parents support / month ₹",10000)}${field("fYears","Planning horizon years",25)}${field("fInfl","Inflation %",6)}</div><button class="btn primary" onclick="runFamily()">BUILD FAMILY MODEL →</button><div id="fr"></div></section>`);
+function show(html) {
+  document.body.innerHTML = `
+    <div id="lifeosApp">
+      <div class="lx-top">
+        <b>LIFEOS X</b>
+        <span>FINANCIAL DIGITAL TWIN</span>
+      </div>
+      <main>${html}</main>
+    </div>
+  `;
 }
-function runFamily(){let c=val("fChildren",2),infl=val("fInfl",6)/100,y=val("fYears",25),edu=val("fEdu"),wed=val("fWedding"),health=val("fHealth"),family=val("fFamily")*12,parents=val("fParents")*12,total=c*(edu+wed);for(let i=0;i<y;i++){total+=(health+family+parents)*Math.pow(1+infl,i)}document.getElementById("fr").innerHTML=`<div class="result"><small>ESTIMATED FAMILY LIFETIME FUND</small><h3>${money(total)}</h3><p>Includes education, weddings, healthcare, family costs and parents support with inflation.</p></div>`}
 
-function stress(){
-shell("Financial Stress Test.","Combine multiple shocks to see how resilient the current financial model is.",`
-<section class="panel"><div class="grid">${field("sIncome","Income drop %",30)}${field("sExpense","Expense increase %",25)}${field("sMarket","Market fall %",30)}${field("sEmergency","Emergency cost ₹",500000)}${field("sJob","Job-loss months",6)}${field("sMedical","Medical cost ₹",300000)}${field("sDebtRate","Debt interest %",12)}${field("sMonths","Stress period months",12)}</div><button class="btn primary" onclick="runStress()">RUN STRESS TEST →</button><div id="sr"></div></section>`);
+function field(label, id, value, type = "number") {
+  return `
+    <div class="lx-field">
+      <label>${label}</label>
+      <input id="${id}" type="${type}" value="${value}">
+    </div>
+  `;
 }
-function runStress(){let income=P.income*(1-val("sIncome",30)/100),expense=P.expense*(1+val("sExpense",25)/100),market=P.savings*val("sMarket",30)/100,job=Math.max(0,income-expense)*val("sJob",6),loss=market+val("sEmergency")+val("sMedical")-job;let remaining=P.savings-loss;document.getElementById("sr").innerHTML=`<div class="result"><small>STRESS SURVIVAL BALANCE</small><h3 class="${remaining>=0?"good":"bad"}">${money(remaining)}</h3><p>${remaining>=0?"Current reserves cover this modeled shock.":"Modeled shock creates a funding gap."}</p></div>`}
 
-function debt(){
-shell("Debt Destroyer.","Compare repayment strategies and estimate interest saved by accelerating debt.",`
-<section class="panel"><div class="grid">${field("dBalance","Debt balance ₹",500000)}${field("dRate","Interest %",12)}${field("dPayment","Monthly payment ₹",15000)}${field("dExtra","Extra payment ₹/month",5000)}${field("dMonths","Current remaining months",60)}</div><button class="btn primary" onclick="runDebt()">COMPARE DEBT PLAN →</button><div id="dr"></div></section>`);
+function card(title, value, sub = "") {
+  return `
+    <div class="lx-card">
+      <small>${title}</small>
+      <strong>${value}</strong>
+      <span>${sub}</span>
+    </div>
+  `;
 }
-function runDebt(){let bal=val("dBalance"),r=val("dRate")/100/12,pay=val("dPayment"),extra=val("dExtra"),m=0,interest=0;while(bal>0&&m<600){let i=bal*r;interest+=i;bal-=Math.max(0,pay+extra-i);m++}document.getElementById("dr").innerHTML=`<div class="result"><small>ACCELERATED PAYOFF</small><h3>${m} months</h3><p>Estimated interest: ${money(interest)} · Payment used: ${money(pay+extra)}/month.</p></div>`}
 
-function fire(){
-shell("FIRE & Retirement Lab.","Estimate the portfolio required for financial independence using spending and withdrawal assumptions.",`
-<section class="panel"><div class="grid">${field("fireExpense","Desired monthly retirement expense ₹",P.expense*2)}${field("fireRate","Safe withdrawal assumption %",4)}${field("fireCurrent","Current investable assets ₹",P.savings)}${field("fireReturn","Expected return %",10)}${field("fireInfl","Inflation %",6)}${field("fireMonthly","Monthly investment ₹",20000)}</div><button class="btn primary" onclick="runFire()">CALCULATE FI NUMBER →</button><div id="fir"></div></section>`);
+function openProfile() {
+  show(`
+    <section class="lx-panel hero">
+      <div class="eyebrow">LIFEOS X / PERSONAL DIGITAL TWIN</div>
+
+      <h1>
+        Build Your<br>
+        <em>Financial Future.</em>
+      </h1>
+
+      <p>
+        Model income, expenses, inflation, family, education,
+        house, loans, investments, business and unexpected events.
+      </p>
+
+      <div class="lx-grid">
+        ${field("Current Age", "age", 20)}
+        ${field("Monthly Income ₹", "income", 50000)}
+        ${field("Monthly Expense ₹", "expense", 15000)}
+        ${field("Current Savings ₹", "savings", 100000)}
+        ${field("Investment / Month ₹", "investment", 10000)}
+        ${field("Expected Income Growth %", "growth", 8)}
+        ${field("Expected Return %", "returnRate", 12)}
+        ${field("Inflation %", "inflation", 6)}
+        ${field("Retirement Age", "retirement", 60)}
+        ${field("Emergency Fund ₹", "emergency", 100000)}
+      </div>
+
+      <h3>Life Events</h3>
+
+      <div class="lx-grid">
+        ${field("Marriage Age", "marriageAge", 28)}
+        ${field("Marriage Cost ₹", "marriageCost", 800000)}
+        ${field("Children", "children", 2)}
+        ${field("First Child Age", "childAge", 30)}
+        ${field("Education Cost / Child ₹", "educationCost", 1500000)}
+        ${field("House Purchase Age", "houseAge", 32)}
+        ${field("House Cost ₹", "houseCost", 6000000)}
+        ${field("Car Purchase Age", "carAge", 30)}
+        ${field("Car Cost ₹", "carCost", 1200000)}
+        ${field("Loan EMI ₹", "emi", 0)}
+      </div>
+
+      <button class="lx-btn" onclick="createTwin()">
+        CREATE DIGITAL TWIN →
+      </button>
+    </section>
+  `);
 }
-function runFire(){let annual=val("fireExpense")*12,target=annual/(val("fireRate",4)/100),cur=val("fireCurrent"),r=val("fireReturn",10)/100/12,m=0;while(cur<target&&m<1200){cur=cur*(1+r)+val("fireMonthly");m++}document.getElementById("fir").innerHTML=`<div class="result"><small>FINANCIAL INDEPENDENCE NUMBER</small><h3>${money(target)}</h3><p>At the modeled contribution and return, target reached in approximately ${(m/12).toFixed(1)} years.</p></div>`}
 
-function compare(){
-shell("Scenario Command Center.","Run two different futures side-by-side so one decision does not have to be guessed.",`
-<section class="panel"><div class="grid">${field("caIncome","Scenario A income growth %",8)}${field("cbIncome","Scenario B income growth %",12)}${field("caExpense","Scenario A expense / month ₹",P.expense)}${field("cbExpense","Scenario B expense / month ₹",P.expense+10000)}${field("caInvest","Scenario A extra investment ₹",5000)}${field("cbInvest","Scenario B extra investment ₹",15000)}${field("cYears","Comparison years",20)}</div><button class="btn primary" onclick="runCompare()">COMPARE FUTURES →</button><div id="cr"></div></section>`);
+function createTwin() {
+  LIFEOS.profile = {
+    age: val("age", 20),
+    income: val("income", 50000),
+    expense: val("expense", 15000),
+    savings: val("savings", 100000),
+    investment: val("investment", 10000),
+    growth: val("growth", 8) / 100,
+    returnRate: val("returnRate", 12) / 100,
+    inflation: val("inflation", 6) / 100,
+    retirement: val("retirement", 60),
+    emergency: val("emergency", 100000),
+
+    marriageAge: val("marriageAge", 28),
+    marriageCost: val("marriageCost", 800000),
+
+    children: val("children", 2),
+    childAge: val("childAge", 30),
+    educationCost: val("educationCost", 1500000),
+
+    houseAge: val("houseAge", 32),
+    houseCost: val("houseCost", 6000000),
+
+    carAge: val("carAge", 30),
+    carCost: val("carCost", 1200000),
+
+    emi: val("emi", 0)
+  };
+
+  buildProjection();
+  showDashboard();
 }
-function runCompare(){function calc(g,e,i){let w=P.savings;for(let y=0;y<val("cYears",20);y++){w=w*(1+P.returnRate)+(P.income*Math.pow(1+g/100,y)-e+i)*12}return w}let a=calc(val("caIncome"),val("caExpense"),val("caInvest")),b=calc(val("cbIncome"),val("cbExpense"),val("cbInvest"));document.getElementById("cr").innerHTML=`<div class="cards"><div class="card"><small>SCENARIO A</small><strong>${money(a)}</strong></div><div class="card"><small>SCENARIO B</small><strong>${money(b)}</strong></div><div class="card"><small>DIFFERENCE</small><strong>${money(b-a)}</strong></div><div class="card"><small>HORIZON</small><strong>${val("cYears")} years</strong></div></div>`}
 
-function exportData(){const blob=new Blob([JSON.stringify(P,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="LIFEOS-X-profile.json";a.click();URL.revokeObjectURL(a.href)}
-function resetData(){localStorage.removeItem(KEY);P={...defaultProfile};toast("Profile reset");dashboard()}
 
-dashboard();
+/* =========================================================
+   FIXED PROJECTION
+   Current age = current net worth
+   Future calculation starts from next age
+   ========================================================= */
+
+function buildProjection() {
+
+  const p = LIFEOS.profile;
+
+  let income = p.income;
+  let expense = p.expense;
+  let wealth = p.savings;
+
+  LIFEOS.projection = [];
+
+
+  // CURRENT YEAR
+  // Example:
+  // Age 20 + Savings ₹50,000
+  // Dashboard will show ₹50,000
+
+  LIFEOS.projection.push({
+    age: p.age,
+    income: income,
+    expense: expense,
+    wealth: wealth,
+    eventCost: 0
+  });
+
+
+  // FUTURE YEARS
+  // Calculation starts from Age 21
+
+  for (let age = p.age + 1; age <= p.retirement; age++) {
+
+    // Income and expense grow for the new year
+
+    income *= 1 + p.growth;
+    expense *= 1 + p.inflation;
+
+
+    let eventCost = 0;
+
+
+    // Marriage
+
+    if (age === p.marriageAge) {
+      eventCost += p.marriageCost;
+    }
+
+
+    // Child education
+
+    if (age === p.childAge) {
+      eventCost += p.educationCost * p.children * 0.15;
+    }
+
+    if (age === p.childAge + 5) {
+      eventCost += p.educationCost * p.children * 0.25;
+    }
+
+    if (age === p.childAge + 10) {
+      eventCost += p.educationCost * p.children * 0.60;
+    }
+
+
+    // House
+
+    if (age === p.houseAge) {
+      eventCost += p.houseCost;
+    }
+
+
+    // Car
+
+    if (age === p.carAge) {
+      eventCost += p.carCost;
+    }
+
+
+    // Annual income
+
+    const annualIncome = income * 12;
+
+
+    // Annual expense
+
+    const annualExpense = expense * 12;
+
+
+    // Annual saving / investment
+
+    const annualInvestment = Math.max(
+      0,
+      annualIncome - annualExpense - p.emi * 12
+    );
+
+
+    // Wealth calculation
+
+    wealth =
+      wealth * (1 + p.returnRate) +
+      annualInvestment -
+      eventCost;
+
+
+    // Save projection
+
+    LIFEOS.projection.push({
+      age: age,
+      income: income,
+      expense: expense,
+      wealth: wealth,
+      eventCost: eventCost
+    });
+
+  }
+}
+
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+function showDashboard() {
+
+  const p = LIFEOS.profile;
+
+  const now = LIFEOS.projection[0];
+
+  const r =
+    LIFEOS.projection[LIFEOS.projection.length - 1];
+
+
+  show(`
+    <section class="lx-panel">
+
+      <div class="eyebrow">
+        LIVE FINANCIAL COMMAND CENTER
+      </div>
+
+      <h1>
+        Your Financial <em>Digital Twin</em>
+      </h1>
+
+
+      <div class="lx-cards">
+
+        ${card(
+          "CURRENT NET WORTH",
+          shortMoney(now.wealth),
+          "Starting position"
+        )}
+
+        ${card(
+          "MONTHLY FLOW",
+          "₹" + money(p.income),
+          "Current income"
+        )}
+
+        ${card(
+          "RETIREMENT WEALTH",
+          shortMoney(r.wealth),
+          "Age " + p.retirement
+        )}
+
+        ${card(
+          "INCOME GROWTH",
+          (p.growth * 100).toFixed(1) + "%",
+          "Annual assumption"
+        )}
+
+      </div>
+
+
+      <div class="lx-actions">
+
+        <button onclick="showProjection()">
+          📈 Future Timeline
+        </button>
+
+        <button onclick="openWhatIf()">
+          🧠 What-If Engine
+        </button>
+
+        <button onclick="openBusiness()">
+          💼 Business Lab
+        </button>
+
+        <button onclick="openGoals()">
+          🎯 Goal Planner
+        </button>
+
+        <button onclick="openRisk()">
+          ⚠️ Stress Test
+        </button>
+
+        <button onclick="openFamily()">
+          👨‍👩‍👧 Family Planner
+        </button>
+
+      </div>
+
+
+      <div class="lx-panel inner">
+
+        <h2>LifeOS X Analysis</h2>
+
+        <p>
+          Your model considers income growth, inflation, investments,
+          family events, education, housing, vehicles and retirement.
+        </p>
+
+
+        <div class="lx-feature-grid">
+
+          <div>💰 Income Engine</div>
+          <div>📊 Wealth Projection</div>
+          <div>📈 Investment Model</div>
+          <div>🏠 Property Planner</div>
+          <div>🎓 Education Planner</div>
+          <div>💍 Marriage Model</div>
+          <div>🚗 Lifestyle Model</div>
+          <div>💳 Debt Analyzer</div>
+          <div>💼 Business Simulator</div>
+          <div>⚠️ Risk Engine</div>
+          <div>🎯 Goal Engine</div>
+          <div>🔥 What-If Simulator</div>
+
+        </div>
+
+      </div>
+
+    </section>
+  `);
+}
+
+
+/* =========================================================
+   FUTURE PROJECTION
+   ========================================================= */
+
+function showProjection() {
+
+  const rows = LIFEOS.projection.map(x => `
+
+    <div class="lx-row">
+
+      <b>${x.age}</b>
+
+      <span>
+        ₹${money(x.income * 12)}
+      </span>
+
+      <span>
+        ₹${money(x.expense * 12)}
+      </span>
+
+      <strong>
+        ${shortMoney(x.wealth)}
+      </strong>
+
+    </div>
+
+  `).join("");
+
+
+  show(`
+
+    <section class="lx-panel">
+
+      <button onclick="showDashboard()">
+        ← Dashboard
+      </button>
+
+      <div class="eyebrow">
+        FUTURE ENGINE
+      </div>
+
+      <h1>
+        Life <em>Timeline</em>
+      </h1>
+
+
+      <div class="lx-table">
+
+        <div class="lx-row head">
+
+          <b>AGE</b>
+
+          <b>ANNUAL INCOME</b>
+
+          <b>ANNUAL EXPENSE</b>
+
+          <b>NET WORTH</b>
+
+        </div>
+
+        ${rows}
+
+      </div>
+
+    </section>
+
+  `);
+}
+
+
+/* =========================================================
+   WHAT IF
+   ========================================================= */
+
+function openWhatIf() {
+
+  show(`
+
+    <section class="lx-panel">
+
+      <button onclick="showDashboard()">
+        ← Dashboard
+      </button>
+
+      <div class="eyebrow">
+        LIFEOS X / WHAT-IF ENGINE
+      </div>
+
+      <h1>
+        Change Your <em>Future</em>
+      </h1>
+
+      <p>
+        Different decisions ka long-term financial impact dekho.
+      </p>
+
+
+      <div class="lx-grid">
+
+        ${field("Income Growth %", "wfGrowth", 10)}
+
+        ${field(
+          "Monthly Expense ₹",
+          "wfExpense",
+          LIFEOS.profile.expense
+        )}
+
+        ${field(
+          "Extra Investment ₹/month",
+          "wfInvestment",
+          5000
+        )}
+
+        ${field(
+          "Inflation %",
+          "wfInflation",
+          6
+        )}
+
+        ${field(
+          "Business Investment ₹",
+          "wfBusiness",
+          0
+        )}
+
+        ${field(
+          "Emergency Cost ₹",
+          "wfEmergency",
+          0
+        )}
+
+        ${field(
+          "Retirement Age",
+          "wfRetirement",
+          LIFEOS.profile.retirement
+        )}
+
+        ${field(
+          "Extra Income ₹/month",
+          "wfExtraIncome",
+          0
+        )}
+
+      </div>
+
+
+      <button class="lx-btn" onclick="runWhatIf()">
+        SIMULATE SCENARIO →
+      </button>
+
+
+      <div id="whatIfResult"></div>
+
+    </section>
+
+  `);
+}
+
+
+function runWhatIf() {
+
+  const p = LIFEOS.profile;
+
+  let income =
+    p.income + val("wfExtraIncome");
+
+  let expense =
+    val("wfExpense", p.expense);
+
+  let wealth =
+    p.savings -
+    val("wfBusiness") -
+    val("wfEmergency");
+
+
+  const growth =
+    val("wfGrowth", 8) / 100;
+
+  const inflation =
+    val("wfInflation", 6) / 100;
+
+  const investment =
+    val("wfInvestment", 0);
+
+  const endAge =
+    val("wfRetirement", 60);
+
+
+  for (
+    let age = p.age;
+    age <= endAge;
+    age++
+  ) {
+
+    wealth =
+      wealth * (1 + p.returnRate) +
+      Math.max(
+        0,
+        (income - expense) * 12
+      ) +
+      investment * 12;
+
+
+    income *= 1 + growth;
+
+    expense *= 1 + inflation;
+
+  }
+
+
+  get("whatIfResult").innerHTML = `
+
+    <div class="lx-result">
+
+      <small>
+        PROJECTED RESULT
+      </small>
+
+      <h2>
+        ${shortMoney(wealth)}
+      </h2>
+
+      <p>
+        Age ${p.age} se ${endAge} tak
+        scenario ke according estimated wealth.
+      </p>
+
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   BUSINESS
+   ========================================================= */
+
+function openBusiness() {
+
+  show(`
+
+    <section class="lx-panel">
+
+      <button onclick="showDashboard()">
+        ← Dashboard
+      </button>
+
+      <div class="eyebrow">
+        LIFEOS X / BUSINESS LAB
+      </div>
+
+      <h1>
+        Business <em>Simulator</em>
+      </h1>
+
+      <p>
+        Business start karne se personal wealth par kya effect padega?
+      </p>
+
+
+      <div class="lx-grid">
+
+        ${field(
+          "Starting Capital ₹",
+          "bizCapital",
+          500000
+        )}
+
+        ${field(
+          "Monthly Revenue ₹",
+          "bizRevenue",
+          100000
+        )}
+
+        ${field(
+          "Monthly Business Cost ₹",
+          "bizCost",
+          60000
+        )}
+
+        ${field(
+          "Revenue Growth %",
+          "bizGrowth",
+          10
+        )}
+
+        ${field(
+          "Tax / Other %",
+          "bizTax",
+          20
+        )}
+
+        ${field(
+          "Business Years",
+          "bizYears",
+          5
+        )}
+
+        ${field(
+          "Personal Investment ₹",
+          "bizPersonal",
+          10000
+        )}
+
+        ${field(
+          "Failure Probability %",
+          "bizRisk",
+          10
+        )}
+
+      </div>
+
+
+      <button
+        class="lx-btn"
+        onclick="runBusiness()"
+      >
+        RUN BUSINESS MODEL →
+      </button>
+
+
+      <div id="businessResult"></div>
+
+    </section>
+
+  `);
+}
+
+
+function runBusiness() {
+
+  let revenue =
+    val("bizRevenue", 100000);
+
+  let cost =
+    val("bizCost", 60000);
+
+  let capital =
+    val("bizCapital", 500000);
+
+  const growth =
+    val("bizGrowth", 10) / 100;
+
+  const tax =
+    val("bizTax", 20) / 100;
+
+  const years =
+    val("bizYears", 5);
+
+  const risk =
+    val("bizRisk", 10);
+
+
+  let totalProfit = -capital;
+
+
+  for (
+    let y = 1;
+    y <= years;
+    y++
+  ) {
+
+    const yearlyProfit =
+      Math.max(
+        0,
+        (revenue - cost) * 12
+      ) *
+      (1 - tax);
+
+
+    totalProfit += yearlyProfit;
+
+    revenue *= 1 + growth;
+
+  }
+
+
+  const riskAdjusted =
+    totalProfit *
+    (1 - risk / 100);
+
+
+  get("businessResult").innerHTML = `
+
+    <div class="lx-result">
+
+      <small>
+        RISK-ADJUSTED BUSINESS VALUE
+      </small>
+
+      <h2>
+        ${shortMoney(riskAdjusted)}
+      </h2>
+
+      <p>
+        Total projected profit after
+        ${years} years:
+        ${shortMoney(totalProfit)}
+      </p>
+
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   GOALS
+   ========================================================= */
+
+function openGoals() {
+
+  show(`
+
+    <section class="lx-panel">
+
+      <button onclick="showDashboard()">
+        ← Dashboard
+      </button>
+
+      <div class="eyebrow">
+        LIFEOS X / GOAL ENGINE
+      </div>
+
+      <h1>
+        Goal <em>Planner</em>
+      </h1>
+
+
+      <div class="lx-grid">
+
+        ${field(
+          "Goal Amount ₹",
+          "goalAmount",
+          10000000
+        )}
+
+        ${field(
+          "Current Amount ₹",
+          "goalCurrent",
+          100000
+        )}
+
+        ${field(
+          "Monthly Contribution ₹",
+          "goalMonthly",
+          20000
+        )}
+
+        ${field(
+          "Expected Return %",
+          "goalReturn",
+          12
+        )}
+
+        ${field(
+          "Target Years",
+          "goalYears",
+          10
+        )}
+
+      </div>
+
+
+      <button
+        class="lx-btn"
+        onclick="calculateGoal()"
+      >
+        CALCULATE GOAL →
+      </button>
+
+
+      <div id="goalResult"></div>
+
+    </section>
+
+  `);
+}
+
+
+function calculateGoal() {
+
+  let current =
+    val("goalCurrent");
+
+  const target =
+    val("goalAmount");
+
+  const monthly =
+    val("goalMonthly");
+
+  const rate =
+    val("goalReturn", 12) /
+    100 /
+    12;
+
+  const months =
+    val("goalYears", 10) * 12;
+
+
+  for (
+    let i = 0;
+    i < months;
+    i++
+  ) {
+
+    current =
+      current *
+      (1 + rate) +
+      monthly;
+
+  }
+
+
+  const percentage =
+    Math.min(
+      100,
+      (current / target) * 100
+    );
+
+
+  get("goalResult").innerHTML = `
+
+    <div class="lx-result">
+
+      <small>
+        PROJECTED GOAL VALUE
+      </small>
+
+      <h2>
+        ${shortMoney(current)}
+      </h2>
+
+      <p>
+        Target:
+        ${shortMoney(target)}
+      </p>
+
+
+      <div class="progress">
+
+        <div
+          style="width:${percentage}%"
+        ></div>
+
+      </div>
+
+
+      <p>
+        ${percentage.toFixed(1)}%
+        of target projected.
+      </p>
+
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   STRESS TEST
+   ========================================================= */
+
+function openRisk() {
+
+  show(`
+
+    <section class="lx-panel">
+
+      <button onclick="showDashboard()">
+        ← Dashboard
+      </button>
+
+      <div class="eyebrow">
+        LIFEOS X / STRESS TEST
+      </div>
+
+      <h1>
+        Financial <em>Stress Test</em>
+      </h1>
+
+
+      <div class="lx-grid">
+
+        ${field(
+          "Income Drop %",
+          "riskIncome",
+          30
+        )}
+
+        ${field(
+          "Expense Increase %",
+          "riskExpense",
+          25
+        )}
+
+        ${field(
+          "Market Crash %",
+          "riskMarket",
+          30
+        )}
+
+        ${field(
+          "Emergency Cost ₹",
+          "riskEmergency",
+          500000
+        )}
+
+        ${field(
+          "Job Loss Months",
+          "riskJob",
+          6
+        )}
+
+        ${field(
+          "Medical Cost ₹",
+          "riskMedical",
+          300000
+        )}
+
+      </div>
+
+
+      <button
+        class="lx-btn"
+        onclick="runRisk()"
+      >
+        RUN STRESS TEST →
+      </button>
+
+
+      <div id="riskResult"></div>
+
+    </section>
+
+  `);
+}
+
+
+function runRisk() {
+
+  const p =
+    LIFEOS.profile;
+
+
+  const incomeLoss =
+    p.income *
+    (val("riskIncome", 30) / 100);
+
+
+  const extraExpense =
+    p.expense *
+    (val("riskExpense", 25) / 100);
+
+
+  const marketLoss =
+    p.savings *
+    (val("riskMarket", 30) / 100);
+
+
+  const jobLoss =
+    (p.income - incomeLoss) *
+    val("riskJob", 6);
+
+
+  const totalEmergency =
+    val("riskEmergency") +
+    val("riskMedical");
+
+
+  const remaining =
+    p.savings -
+    marketLoss -
+    jobLoss -
+    totalEmergency -
+    extraExpense * 12;
+
+
+  get("riskResult").innerHTML = `
+
+    <div class="lx-result">
+
+      <small>
+        STRESS TEST RESULT
+      </small>
+
+      <h2>
+        ${shortMoney(remaining)}
+      </h2>
+
+      <p>
+        This scenario combines income reduction,
+        expense inflation, market loss,
+        job-loss period and emergency costs.
+      </p>
+
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   FAMILY
+   ========================================================= */
+
+function openFamily() {
+
+  show(`
+
+    <section class="lx-panel">
+
+      <button onclick="showDashboard()">
+        ← Dashboard
+      </button>
+
+      <div class="eyebrow">
+        LIFEOS X / FAMILY ENGINE
+      </div>
+
+      <h1>
+        Family <em>Planner</em>
+      </h1>
+
+
+      <div class="lx-grid">
+
+        ${field(
+          "Number of Children",
+          "famChildren",
+          2
+        )}
+
+        ${field(
+          "Education Cost / Child ₹",
+          "famEducation",
+          1500000
+        )}
+
+        ${field(
+          "Healthcare / Year ₹",
+          "famHealth",
+          100000
+        )}
+
+        ${field(
+          "Family Monthly Expense ₹",
+          "famExpense",
+          30000
+        )}
+
+        ${field(
+          "Parents Support / Month ₹",
+          "famParents",
+          10000
+        )}
+
+        ${field(
+          "Wedding Fund / Child ₹",
+          "famWedding",
+          1000000
+        )}
+
+        ${field(
+          "Children Age Gap",
+          "famGap",
+          3
+        )}
+
+      </div>
+
+
+      <button
+        class="lx-btn"
+        onclick="calculateFamily()"
+      >
+        BUILD FAMILY MODEL →
+      </button>
+
+
+      <div id="familyResult"></div>
+
+    </section>
+
+  `);
+}
+
+
+function calculateFamily() {
+
+  const children =
+    val("famChildren", 2);
+
+  const education =
+    val("famEducation");
+
+  const health =
+    val("famHealth");
+
+  const expense =
+    val("famExpense") * 12;
+
+  const parents =
+    val("famParents") * 12;
+
+  const wedding =
+    val("famWedding");
+
+
+  const total =
+    children * education +
+    children * wedding +
+    health * 20 +
+    expense * 20 +
+    parents * 20;
+
+
+  get("familyResult").innerHTML = `
+
+    <div class="lx-result">
+
+      <small>
+        LONG-TERM FAMILY REQUIREMENT
+      </small>
+
+      <h2>
+        ${shortMoney(total)}
+      </h2>
+
+      <p>
+        Education + weddings + healthcare +
+        family expenses + parents support ka
+        combined estimate.
+      </p>
+
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   START BUTTON
+   ========================================================= */
+
+if (startButton) {
+
+  startButton.addEventListener(
+    "click",
+    openProfile
+  );
+
+}
