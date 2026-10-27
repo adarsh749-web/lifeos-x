@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LIFEOS X - Financial Digital Twin</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#03080d;
+    color:#f5f7fb;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+header{
+    height:75px;
+    background:#050b11;
+    border-bottom:1px solid #172432;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    position:relative;
+    z-index:10;
+}
+
+.logo{
+    font-size:19px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+
+.logo span{
+    color:#11d7f4;
+}
+
+.online{
+    color:#1df08a;
+    font-size:13px;
+}
+
+.container{
+    max-width:1290px;
+    margin:auto;
+    padding:15px 20px 80px;
+}
+
+nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    overflow:visible;
+    padding:12px 0 25px;
+    align-items:center;
+}
+
+nav button{
+    appearance:none;
+    border:1px solid #1e2d40;
+    color:#91a5c0;
+    background:#0a121d;
+    padding:13px 19px;
+    border-radius:30px;
+    white-space:nowrap;
+    cursor:pointer;
+    font:inherit;
+    font-size:16px;
+    transition:.18s ease;
+}
+
+nav button:hover,
+nav button.active{
+    background:#15d6f3;
+    color:#001018;
+    border-color:#15d6f3;
+}
+
+section{
+    padding:40px 0;
+    min-height:calc(100vh - 185px);
+    display:none;
+}
+
+section.active-section{
+    display:block;
+}
+
+html,body{
+    overflow-x:hidden;
+}
+
+.eyebrow{
+    color:#11d7f4;
+    font-size:13px;
+    font-weight:bold;
+    letter-spacing:5px;
+    margin-bottom:25px;
+}
+
+h1{
+    font-size:38px;
+    margin-bottom:14px;
+}
+
+.description{
+    color:#8fa5c2;
+    font-size:17px;
+    line-height:1.6;
+    margin-bottom:25px;
+}
+
+.card{
+    background:linear-gradient(145deg,#0a131e,#071019);
+    border:1px solid #223247;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+label{
+    display:block;
+    color:#91a7c3;
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+input{
+    width:100%;
+    padding:16px;
+    border-radius:12px;
+    border:1px solid #2a3b50;
+    background:#121d29;
+    color:white;
+    font-size:16px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#12d8f5;
+}
+
+button{
+    border:none;
+    background:#13d5f2;
+    color:#001018;
+    padding:16px 23px;
+    border-radius:12px;
+    font-weight:900;
+    cursor:pointer;
+    margin-top:18px;
+}
+
+button:hover{
+    filter:brightness(1.1);
+}
+
+.hero{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:40px;
+    align-items:center;
+}
+
+.hero h1{
+    font-size:76px;
+    line-height:.98;
+}
+
+.cyan{
+    color:#12d8f5;
+}
+
+.green{
+    color:#18ed89;
+}
+
+.live-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.metric{
+    background:#111c28;
+    border:1px solid #24364b;
+    border-radius:18px;
+    padding:20px;
+}
+
+.metric small{
+    color:#8fa5c2;
+    letter-spacing:1px;
+}
+
+.metric strong{
+    display:block;
+    font-size:25px;
+    margin:14px 0 5px;
+}
+
+.status{
+    margin-top:18px;
+    background:#0b1722;
+    border:1px solid #26394e;
+    border-radius:18px;
+    padding:23px;
+}
+
+.status strong{
+    display:block;
+    font-size:28px;
+    margin:10px 0;
+}
+
+.timeline{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:13px;
+}
+
+.result{
+    display:none;
+    margin-top:20px;
+}
+
+.result.show{
+    display:block;
+}
+
+.result-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+}
+
+footer{
+    text-align:center;
+    color:#62758d;
+    border-top:1px solid #142230;
+    padding:25px;
+    font-size:12px;
+}
+
+
+
+.scheme-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.scheme-card{background:linear-gradient(145deg,#0a131e,#071019);border:1px solid #223247;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.scheme-card h3{font-size:18px;line-height:1.35}
+.scheme-card p{color:#91a7c3;font-size:13px;line-height:1.55}
+.scheme-meta{display:flex;flex-wrap:wrap;gap:6px}
+.scheme-tag{font-size:11px;padding:5px 8px;border-radius:20px;background:#122333;color:#a8c3df;border:1px solid #263b50}
+.scheme-rate{font-size:22px;font-weight:900;color:#18ed89}
+.scheme-card a{color:#12d8f5;text-decoration:none;font-weight:bold;margin-top:auto;padding-top:4px}
+.scheme-card a:hover{text-decoration:underline}
+.tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+.tool-grid .metric span{display:block;color:#91a7c3;line-height:1.5;margin-top:10px;font-size:13px}
+select{width:100%;padding:16px;border-radius:12px;border:1px solid #2a3b50;background:#121d29;color:white;font-size:16px}
+@media(max-width:850px){.scheme-grid{grid-template-columns:1fr}.tool-grid{grid-template-columns:1fr}}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+    header{
+        padding:0 15px;
+    }
+
+    .online{
+        display:none;
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+    }
+
+    .hero h1{
+        font-size:52px;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .live-grid{
+        grid-template-columns:1fr;
+    }
+
+    .timeline{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .result-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+/* ===== LIFEOS X / CINEMATIC UI LAYER ===== */
+:root{--aqua:#39e8ff;--violet:#a78bfa;--lime:#62f6b2;--panel:rgba(8,18,31,.78);--line:rgba(123,178,220,.18)}
+html{scroll-behavior:smooth}
+body{position:relative;isolation:isolate;background:#03070d;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 12% 5%,rgba(0,213,255,.12),transparent 34%),radial-gradient(ellipse at 90% 25%,rgba(133,87,255,.13),transparent 30%),radial-gradient(ellipse at 55% 100%,rgba(0,255,170,.06),transparent 35%),#03070d}
+body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.15;background-image:linear-gradient(rgba(74,150,200,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(74,150,200,.10) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,black,transparent 88%)}
+header{position:sticky;top:0;backdrop-filter:blur(22px);background:rgba(3,9,16,.82);border-bottom:1px solid rgba(57,232,255,.18);box-shadow:0 8px 40px rgba(0,0,0,.24)}
+.logo{display:flex;align-items:center;gap:9px;text-shadow:0 0 25px rgba(17,215,244,.18)}
+.logo:before{content:"◈";font-size:25px;color:var(--aqua);filter:drop-shadow(0 0 10px rgba(57,232,255,.65));animation:logoPulse 3s ease-in-out infinite}
+.logo span{color:var(--aqua);text-shadow:0 0 16px rgba(57,232,255,.65)}
+.online{display:flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid rgba(98,246,178,.2);border-radius:99px;background:rgba(16,72,57,.17);letter-spacing:1px;font-size:10px!important}
+.container{max-width:1400px;padding-top:18px}
+nav{position:sticky;top:75px;z-index:8;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;scrollbar-width:none;padding:12px 0 20px;background:linear-gradient(180deg,rgba(3,7,13,.92),rgba(3,7,13,.68));backdrop-filter:blur(14px)}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;border-radius:13px;padding:11px 15px;font-size:13px;border-color:rgba(100,155,205,.18);background:rgba(8,18,31,.8);transition:transform .22s,border-color .22s,box-shadow .22s,background .22s}
+nav button:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(21,214,243,.12)}
+nav button.active{box-shadow:0 0 0 1px rgba(21,214,243,.12),0 0 25px rgba(21,214,243,.15);font-weight:900}
+section{padding-top:32px;animation:sectionIn .48s cubic-bezier(.2,.75,.25,1) both}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:99px;border:1px solid rgba(57,232,255,.2);background:rgba(11,42,58,.34);font-size:10px;letter-spacing:3px;margin-bottom:22px}
+.eyebrow:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--aqua);box-shadow:0 0 12px var(--aqua);animation:blink 1.8s infinite}
+h1{letter-spacing:-1.7px;line-height:1.08}
+.hero h1{font-size:clamp(48px,6.3vw,86px);letter-spacing:-4px;max-width:720px;background:linear-gradient(110deg,#fff 5%,#a7f4ff 48%,#a99bff 88%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 5px 30px rgba(31,196,255,.08))}
+.hero h1 .cyan{color:#54edff;-webkit-text-fill-color:#54edff;text-shadow:0 0 30px rgba(18,216,245,.16)}
+.description{max-width:760px;color:#9aadc6}
+.card{background:linear-gradient(145deg,rgba(12,26,43,.88),rgba(5,13,23,.88));border:1px solid var(--line);box-shadow:0 20px 65px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.025);backdrop-filter:blur(14px);transition:border-color .25s,transform .25s,box-shadow .25s}
+.card:hover{border-color:rgba(57,232,255,.26);box-shadow:0 24px 70px rgba(0,0,0,.3),0 0 28px rgba(57,232,255,.035)}
+.hero>.card{position:relative;overflow:hidden}
+.hero>.card:before{content:"";position:absolute;width:210px;height:210px;right:-80px;top:-100px;border-radius:50%;background:rgba(0,220,255,.12);filter:blur(34px);pointer-events:none}
+.live-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.metric{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(18,34,51,.88),rgba(7,17,29,.88));border-color:rgba(111,164,210,.16);transition:transform .22s,border-color .22s,background .22s}
+.metric:hover{transform:translateY(-4px);border-color:rgba(57,232,255,.38);background:linear-gradient(145deg,rgba(18,43,61,.96),rgba(7,17,29,.96))}
+.metric strong{letter-spacing:-.6px}
+.green{color:var(--lime);text-shadow:0 0 18px rgba(24,237,137,.12)}
+.cyan{color:var(--aqua)}
+.status{background:linear-gradient(120deg,rgba(9,39,44,.6),rgba(9,19,33,.72));border-color:rgba(98,246,178,.17)}
+input,select{background:rgba(7,17,29,.9);border-color:rgba(113,157,201,.22);transition:border-color .2s,box-shadow .2s,background .2s}
+input:focus,select:focus{border-color:var(--aqua);box-shadow:0 0 0 3px rgba(57,232,255,.09);background:#0b1b2b}
+button{transition:transform .2s,filter .2s,box-shadow .2s}
+section>button,.card>button{background:linear-gradient(110deg,#51efff,#55d9e9 52%,#9ef6ce);box-shadow:0 8px 25px rgba(19,213,242,.12);letter-spacing:.25px}
+section>button:hover,.card>button:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(19,213,242,.22)}
+.scheme-card{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(12,27,44,.95),rgba(5,13,23,.94));border-color:rgba(111,164,210,.17);transition:transform .25s,border-color .25s,box-shadow .25s}
+.scheme-card:before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--aqua),var(--violet),transparent);transform:translateX(-100%);transition:transform .6s}
+.scheme-card:hover{transform:translateY(-5px);border-color:rgba(57,232,255,.42);box-shadow:0 18px 40px rgba(0,0,0,.25),0 0 28px rgba(57,232,255,.06)}
+.scheme-card:hover:before{transform:translateX(0)}
+.scheme-rate{color:var(--lime);text-shadow:0 0 18px rgba(98,246,178,.12)}
+.scheme-card a{display:inline-flex;align-items:center;gap:7px}
+.result.show{animation:resultIn .42s cubic-bezier(.2,.8,.2,1) both}
+.result-grid .metric{animation:resultIn .45s both}
+.result-grid .metric:nth-child(2){animation-delay:.07s}.result-grid .metric:nth-child(3){animation-delay:.14s}
+.dashboard-extra{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px}
+.launch-card{position:relative;min-height:150px;padding:20px;border:1px solid rgba(111,164,210,.17);border-radius:20px;background:linear-gradient(145deg,rgba(12,27,44,.78),rgba(5,13,23,.85));cursor:pointer;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s}
+.launch-card:hover{transform:translateY(-5px);border-color:rgba(57,232,255,.4);box-shadow:0 16px 40px rgba(0,0,0,.2)}
+.launch-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:rgba(57,232,255,.1);border:1px solid rgba(57,232,255,.17);font-size:21px;margin-bottom:18px}
+.launch-card h3{font-size:15px;margin-bottom:7px}.launch-card p{font-size:12px;line-height:1.5;color:#8fa5c2}.launch-card .arrow{position:absolute;right:18px;top:20px;color:var(--aqua)}
+.result{scroll-margin-top:150px}
+footer{margin-top:35px;border-color:rgba(111,164,210,.12)}
+@keyframes logoPulse{0%,100%{transform:rotate(0deg) scale(1);opacity:.85}50%{transform:rotate(45deg) scale(1.12);opacity:1}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes sectionIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes resultIn{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:1050px){.dashboard-extra{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{gap:22px}.hero h1{letter-spacing:-2px}}
+@media(max-width:650px){header{height:65px}.container{padding-left:14px;padding-right:14px}nav{top:65px;margin:0 -2px}.hero h1{font-size:50px;letter-spacing:-2.2px}.hero{gap:24px}.card{padding:20px;border-radius:19px}.live-grid{grid-template-columns:1fr}.dashboard-extra{grid-template-columns:1fr 1fr}.launch-card{padding:15px;min-height:145px}.result-grid{grid-template-columns:1fr}.online{display:none}.eyebrow{letter-spacing:2px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+
+
+/* ===== LIFEOS X: MONEY UNIVERSE EXPERIENCE ===== */
+:root{--aqua:#56f3ff;--violet:#9c7bff;--pink:#ff6bd6;--lime:#b8ff75;--panel:rgba(10,19,38,.78)}
+html{scroll-behavior:smooth}
+body{background:#050611;color:#f7f8ff;overflow-x:hidden;background-image:radial-gradient(ellipse at 12% 5%,rgba(73,61,180,.24),transparent 34%),radial-gradient(ellipse at 88% 20%,rgba(0,217,255,.13),transparent 28%),linear-gradient(145deg,#050611 0%,#07101d 48%,#080617 100%);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.24;background-image:radial-gradient(2px 2px at 20px 30px,#fff 40%,transparent 55%),radial-gradient(1px 1px at 80px 110px,#72efff 40%,transparent 55%),radial-gradient(2px 2px at 160px 70px,#b8a4ff 40%,transparent 55%);background-size:210px 170px;animation:starDrift 28s linear infinite}
+@keyframes starDrift{from{background-position:0 0}to{background-position:210px 170px}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+@keyframes aurora{0%,100%{opacity:.45;transform:translateX(-3%) scale(1)}50%{opacity:.9;transform:translateX(3%) scale(1.08)}}
+@keyframes shine{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes popIn{0%{opacity:0;transform:translateY(18px) scale(.98)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes orbit{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+header{position:sticky;top:0;height:72px;padding:0 clamp(16px,4vw,52px);background:rgba(5,7,20,.82);backdrop-filter:blur(22px);border-bottom:1px solid rgba(119,141,255,.18);box-shadow:0 8px 35px rgba(0,0,0,.22)}
+.logo{font-size:21px;letter-spacing:4px;text-shadow:0 0 22px rgba(86,243,255,.35)}.logo span{color:var(--aqua);text-shadow:0 0 20px rgba(86,243,255,.8)}.online{padding:9px 13px;border:1px solid rgba(99,255,185,.22);border-radius:99px;background:rgba(38,255,164,.07);font-size:11px;letter-spacing:1.4px;animation:blink 3s infinite}
+.container{max-width:1400px;padding:14px clamp(14px,3vw,36px) 90px}
+nav{position:sticky;top:72px;z-index:9;margin:0 -8px;padding:13px 8px 18px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#31375d transparent;flex-wrap:nowrap;background:linear-gradient(180deg,rgba(5,6,17,.93),rgba(5,6,17,.72));backdrop-filter:blur(18px)}
+nav button{flex:0 0 auto;border:1px solid rgba(126,145,202,.2);background:rgba(16,21,43,.8);color:#aab5d3;padding:11px 16px;border-radius:14px;font-size:13px;font-weight:700;transition:all .25s;box-shadow:inset 0 1px rgba(255,255,255,.025)}nav button:hover{transform:translateY(-2px);color:white;border-color:rgba(86,243,255,.55);background:rgba(37,48,86,.95)}nav button.active{color:#06101b;border-color:transparent;background:linear-gradient(110deg,#57f3ff,#8e9cff 55%,#c59aff);box-shadow:0 0 24px rgba(86,243,255,.18);font-weight:900}
+section{padding:32px 0 45px;min-height:calc(100vh - 170px)}section.active-section{animation:popIn .48s cubic-bezier(.2,.8,.2,1) both}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;color:#8ff8ff;letter-spacing:3px;font-size:11px;border:1px solid rgba(86,243,255,.2);border-radius:99px;padding:9px 13px;background:rgba(86,243,255,.055);margin-bottom:21px}.eyebrow:before{content:"✦";color:#d2a6ff;font-size:14px}
+h1{font-size:clamp(32px,4vw,52px);letter-spacing:-1.7px;line-height:1.05;margin-bottom:16px}h2{letter-spacing:-.5px}.description{color:#a6b3d0;max-width:780px;font-size:15px;line-height:1.75}.cyan{color:var(--aqua);text-shadow:0 0 28px rgba(86,243,255,.24)}.green{color:var(--lime)}
+.hero{position:relative;isolation:isolate;grid-template-columns:1.08fr .92fr;gap:clamp(22px,4vw,56px);padding:clamp(12px,3vw,36px) 0 22px;align-items:center}.hero:before{content:"";position:absolute;z-index:-1;width:460px;height:360px;top:-20px;left:-80px;border-radius:50%;background:radial-gradient(circle,rgba(97,76,255,.17),transparent 68%);filter:blur(12px);animation:aurora 8s ease-in-out infinite}.hero h1{font-size:clamp(46px,6.5vw,88px);line-height:.99;letter-spacing:-4px;max-width:720px}.hero h1 .cyan{background:linear-gradient(90deg,#57f3ff,#a5a3ff,#ff8fe7,#57f3ff);background-size:250% auto;color:transparent;background-clip:text;-webkit-background-clip:text;animation:shine 7s linear infinite}.hero .description{font-size:17px;max-width:570px}.hero .card{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(19,28,58,.9),rgba(7,12,29,.92));border-color:rgba(141,155,255,.25);box-shadow:0 28px 90px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.07)}.hero .card:before{content:"";position:absolute;width:210px;height:210px;right:-85px;top:-100px;border-radius:50%;border:1px solid rgba(86,243,255,.18);box-shadow:0 0 0 18px rgba(86,243,255,.025),0 0 0 38px rgba(156,123,255,.025);animation:orbit 28s linear infinite;pointer-events:none}
+.card{background:linear-gradient(145deg,rgba(17,24,49,.86),rgba(8,13,29,.88));border:1px solid rgba(127,148,212,.2);border-radius:25px;padding:clamp(19px,2.5vw,30px);box-shadow:0 20px 60px rgba(0,0,0,.19),inset 0 1px rgba(255,255,255,.035);backdrop-filter:blur(12px);transition:border-color .25s,box-shadow .25s}.card:hover{border-color:rgba(115,223,255,.28)}.metric{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(28,38,73,.8),rgba(12,18,38,.82));border:1px solid rgba(138,155,221,.18);border-radius:18px;padding:19px;transition:transform .25s,border-color .25s}.metric:hover{transform:translateY(-3px);border-color:rgba(86,243,255,.38)}.metric small{font-size:10px;letter-spacing:1.3px;color:#9caed0}.metric strong{font-size:clamp(21px,2vw,29px);letter-spacing:-.7px}.metric strong:empty{display:none}.status{background:linear-gradient(110deg,rgba(50,235,174,.08),rgba(91,120,255,.08));border:1px solid rgba(98,255,193,.16);border-radius:19px;padding:21px}.status strong{font-size:24px}.live-grid{gap:10px}.live-grid .metric{padding:17px 14px}.live-grid .metric strong{font-size:clamp(18px,1.8vw,25px)}
+input,select{background:rgba(9,15,32,.9);border:1px solid rgba(136,155,211,.24);border-radius:14px;color:#f6f7ff;padding:15px;font-size:15px;transition:border-color .2s,box-shadow .2s}input:focus,select:focus{border-color:var(--aqua);box-shadow:0 0 0 3px rgba(86,243,255,.1)}label{font-size:12px;letter-spacing:.35px;color:#b0bdd8}button:not(nav button){background:linear-gradient(105deg,#55efff,#91a1ff 60%,#c28cff);color:#070d20;border:0;border-radius:14px;padding:15px 21px;font-size:12px;letter-spacing:.6px;font-weight:900;box-shadow:0 8px 26px rgba(87,190,255,.13);transition:transform .2s,filter .2s,box-shadow .2s}button:not(nav button):hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 12px 30px rgba(87,190,255,.22)}
+.dashboard-extra{gap:15px;margin-top:24px}.launch-card{min-height:185px;padding:22px;border-radius:23px;background:linear-gradient(150deg,rgba(24,34,68,.86),rgba(9,13,31,.93));border-color:rgba(126,147,221,.22);box-shadow:0 16px 45px rgba(0,0,0,.12)}.launch-card:before{content:"";position:absolute;width:130px;height:130px;right:-60px;bottom:-75px;border-radius:50%;background:rgba(86,243,255,.12);filter:blur(2px);transition:transform .4s}.launch-card:hover:before{transform:scale(2.2)}.launch-card:hover{transform:translateY(-7px) scale(1.015);border-color:rgba(86,243,255,.55);box-shadow:0 20px 55px rgba(0,0,0,.25),0 0 25px rgba(86,243,255,.06)}.launch-icon{display:grid;place-items:center;width:48px;height:48px;margin-bottom:22px;border-radius:15px;background:linear-gradient(140deg,rgba(86,243,255,.2),rgba(156,123,255,.22));border:1px solid rgba(126,232,255,.2);color:#8df8ff;font-size:25px;animation:floaty 5s ease-in-out infinite}.launch-card:nth-child(2) .launch-icon{animation-delay:-1.2s}.launch-card:nth-child(3) .launch-icon{animation-delay:-2.2s}.launch-card:nth-child(4) .launch-icon{animation-delay:-3.2s}.launch-card h3{font-size:17px;margin-bottom:9px}.launch-card p{font-size:13px;color:#a5b1cf;line-height:1.6}.launch-card .arrow{color:#9cf8ff}
+.result.show{animation:resultIn .38s ease both}.result-grid{gap:12px}.scheme-card{background:linear-gradient(145deg,rgba(20,29,58,.88),rgba(9,14,30,.95));border:1px solid rgba(131,153,219,.19);border-radius:20px;padding:20px;transition:transform .25s,border-color .25s,box-shadow .25s}.scheme-card:hover{transform:translateY(-5px);border-color:rgba(86,243,255,.42);box-shadow:0 18px 40px rgba(0,0,0,.2)}.scheme-card h3{font-size:17px;line-height:1.4}.scheme-rate{font-size:24px;color:#9af7ff;font-weight:900;margin:15px 0}.scheme-tag{border-radius:99px;background:rgba(131,143,255,.11);border:1px solid rgba(131,143,255,.15);color:#c0caff}.scheme-card p{font-size:13px;line-height:1.6;color:#aab6d2}.scheme-card a{display:inline-flex;margin-top:14px;color:#91f4ff;font-weight:800;text-decoration:none}.scheme-card a:hover{text-decoration:underline}.tool-grid .metric{min-height:135px}.timeline .metric{animation:popIn .5s both}.timeline .metric:nth-child(2){animation-delay:.07s}.timeline .metric:nth-child(3){animation-delay:.14s}.timeline .metric:nth-child(4){animation-delay:.21s}.timeline .metric:nth-child(5){animation-delay:.28s}
+footer{border-color:rgba(126,147,221,.16);color:#7482a6;letter-spacing:.5px}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.hero h1{font-size:clamp(46px,11vw,68px);letter-spacing:-2.8px}.live-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.scheme-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){header{height:62px}nav{top:62px}.container{padding-top:10px}.hero h1{font-size:46px}.hero .description{font-size:15px}.live-grid{grid-template-columns:1fr}.dashboard-extra{grid-template-columns:1fr 1fr}.launch-card{min-height:170px;padding:16px}.launch-card h3{font-size:14px}.launch-card p{font-size:12px}.scheme-grid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.card{padding:18px}.eyebrow{font-size:10px;letter-spacing:1.5px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+
+
+/* Inline GELLO microphone beside FINANCIAL DIGITAL TWIN */
+.financial-twin-label{display:flex;align-items:center;gap:10px;width:max-content;max-width:100%;}
+.gello-inline-mic{display:inline-grid;place-items:center;width:34px;height:34px;flex:none;margin:0;padding:0;border:1px solid rgba(100,245,255,.72);border-radius:50%;background:linear-gradient(135deg,#12d8f5,#8b5cf6);color:#06111b;font-size:16px;cursor:pointer;box-shadow:0 0 18px rgba(18,216,245,.25);transition:transform .2s,box-shadow .2s;}
+.gello-inline-mic:hover{transform:scale(1.1);box-shadow:0 0 28px rgba(18,216,245,.5);}
+@media(max-width:520px){.gello-inline-mic{width:31px;height:31px;font-size:15px;}}
+
+/* GELLO VOICE ASSISTANT */
+#gello-launcher{position:fixed;right:24px;bottom:22px;z-index:9998;border:1px solid rgba(100,245,255,.65);border-radius:999px;padding:0;background:linear-gradient(135deg,#12d8f5,#8b5cf6);color:#031018;box-shadow:0 0 28px rgba(18,216,245,.32);cursor:pointer;animation:gelloPulse 2.8s infinite;}
+#gello-launcher .gello-launch-inner{display:flex;align-items:center;gap:10px;padding:12px 18px;font-weight:900;letter-spacing:.3px;}
+#gello-launcher .gello-orb{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#07121e;color:#7af6ff;box-shadow:inset 0 0 12px #12d8f5;font-size:17px;}
+@keyframes gelloPulse{0%,100%{box-shadow:0 0 18px rgba(18,216,245,.25)}50%{box-shadow:0 0 34px rgba(139,92,246,.55)}}
+#gello-panel{position:fixed;right:22px;bottom:92px;width:min(390px,calc(100vw - 28px));height:min(590px,calc(100vh - 125px));z-index:9999;display:none;flex-direction:column;overflow:hidden;border:1px solid rgba(105,225,255,.45);border-radius:24px;background:rgba(5,12,24,.97);color:#f5f7fb;box-shadow:0 22px 80px rgba(0,0,0,.65),0 0 35px rgba(18,216,245,.14);backdrop-filter:blur(18px);}
+#gello-panel.open{display:flex;animation:gelloEnter .22s ease-out;}
+@keyframes gelloEnter{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.gello-head{display:flex;align-items:center;gap:11px;padding:16px;background:linear-gradient(120deg,rgba(18,216,245,.15),rgba(139,92,246,.16));border-bottom:1px solid #20364b;}
+.gello-avatar{width:43px;height:43px;flex:none;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,#12d8f5,#8b5cf6);color:#07121e;font-size:21px;box-shadow:0 0 22px rgba(18,216,245,.24)}
+.gello-head h3{font-size:16px;margin:0 0 4px}.gello-head small{font-size:11px;color:#8ff5d3}.gello-close{margin:0 0 0 auto;padding:7px 10px;border-radius:10px;background:#142235;color:#dce8f8;font-size:18px;}
+#gello-messages{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:11px;scroll-behavior:smooth;}
+.gello-msg{max-width:90%;padding:11px 13px;border-radius:15px;font-size:13px;line-height:1.55;overflow-wrap:anywhere;white-space:pre-wrap;}.gello-msg.bot{align-self:flex-start;background:#101e2e;border:1px solid #263b51;color:#eaf6ff;border-bottom-left-radius:5px}.gello-msg.user{align-self:flex-end;background:linear-gradient(135deg,#0dbbd7,#7c5ce7);color:#06111b;font-weight:700;border-bottom-right-radius:5px}
+.gello-quick{display:flex;gap:7px;overflow-x:auto;padding:0 13px 11px}.gello-quick button{margin:0;flex:none;padding:8px 11px;border-radius:999px;background:#101e2e;border:1px solid #294158;color:#bcefff;font-size:11px;font-weight:700;}
+.gello-input-row{display:flex;gap:8px;padding:12px;border-top:1px solid #20364b;background:#080f1b}.gello-input-row input{min-width:0;flex:1;padding:12px;border-radius:12px;font-size:13px}.gello-input-row button{margin:0;padding:10px 12px;border-radius:12px}.gello-mic{background:linear-gradient(135deg,#13d5f2,#8b5cf6)!important;color:#06111b!important}.gello-mic.listening{background:#ff5c83!important;color:white!important;animation:gelloPulse .8s infinite}
+.gello-note{padding:0 14px 10px;color:#6f849f;font-size:10px;line-height:1.4}
+@media(max-width:520px){#gello-launcher{right:13px;bottom:13px}#gello-panel{right:8px;bottom:78px;width:calc(100vw - 16px);height:min(620px,calc(100vh - 95px));border-radius:20px}.gello-launch-inner{padding:10px 13px!important}}
+
+</style>
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="logo">
+        LIFEOS <span>X</span>
+    </div>
+
+    <div class="online">
+        ● MONEY UNIVERSE ONLINE
+    </div>
+
+</header>
+
+
+<div class="container">
+
+<nav id="mainNav" aria-label="LIFEOS X main modules">
+
+<button class="active" data-section="dashboard" onclick="showSection('dashboard')">Dashboard</button>
+<button data-section="profile" onclick="showSection('profile')">Profile</button>
+<button data-section="future" onclick="showSection('future')">Future</button>
+<button data-section="whatif" onclick="showSection('whatif')">What-If</button>
+<button data-section="business" onclick="showSection('business')">Business</button>
+<button data-section="goals" onclick="showSection('goals')">Goals</button>
+<button data-section="family" onclick="showSection('family')">Family</button>
+<button data-section="stress" onclick="showSection('stress')">Stress Test</button>
+<button data-section="debt" onclick="showSection('debt')">Debt</button>
+<button data-section="fire" onclick="showSection('fire')">FIRE</button>
+<button data-section="compare" onclick="showSection('compare')">Compare</button>
+
+<button data-section="investments" onclick="showSection('investments')">Govt. Investments</button>
+<button data-section="tools" onclick="showSection('tools')">Smart Tools</button>
+
+</nav>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard">
+
+<div class="hero">
+
+<div>
+
+<div class="eyebrow financial-twin-label">
+  <span>FINANCIAL DIGITAL TWIN</span>
+  <button class="gello-inline-mic" type="button" aria-label="Talk to GELLO" title="Talk to GELLO" onclick="toggleGello(true);setTimeout(()=>gelloListen(),300)">🎙️</button>
+</div>
+
+<h1>
+Your money.
+Your <span class="cyan">universe.</span>
+</h1>
+
+<p class="description">
+Build your money superpowers. Explore savings quests, grow a future fortune, and test big life decisions — all in one playful control room.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>
+LIVE FINANCIAL MODEL.
+<span class="green">● LIVE</span>
+</h2>
+
+<br>
+
+<div class="live-grid">
+
+<div class="metric">
+<small>NET WORTH</small>
+<strong id="netWorth">₹0</strong>
+<span class="green">Debt free</span>
+</div>
+
+<div class="metric">
+<small>MONTHLY FLOW</small>
+<strong id="monthlyFlow">₹0</strong>
+<span class="green">Saving rate</span>
+</div>
+
+<div class="metric">
+<small>RETIREMENT</small>
+<strong>Age 60</strong>
+<span class="cyan">40 years runway</span>
+</div>
+
+</div>
+
+
+<div class="status">
+
+<small>MODEL STATUS</small>
+
+<strong class="green">
+Healthy cash flow
+</strong>
+
+<span id="statusText">
+Enter your financial details below.
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="dashboard-extra">
+  <div class="launch-card" onclick="showSection('investments')"><span class="arrow">↗</span><div class="launch-icon">₹</div><h3>Investment Hub</h3><p>Explore government schemes and compare options.</p></div>
+  <div class="launch-card" onclick="showSection('future')"><span class="arrow">↗</span><div class="launch-icon">⌁</div><h3>Future Simulator</h3><p>See how your money may grow across life stages.</p></div>
+  <div class="launch-card" onclick="showSection('tools')"><span class="arrow">↗</span><div class="launch-icon">◉</div><h3>Smart Money Tools</h3><p>Estimate SIP growth, inflation and emergency funds.</p></div>
+  <div class="launch-card" onclick="showSection('goals')"><span class="arrow">↗</span><div class="launch-icon">◎</div><h3>Goal Engine</h3><p>Turn a target into a savings plan and timeline.</p></div>
+</div>
+
+<div class="quest-panel" style="margin-top:22px;position:relative;overflow:hidden;border:1px solid rgba(156,123,255,.28);border-radius:25px;padding:clamp(20px,3vw,30px);background:linear-gradient(115deg,rgba(79,58,154,.22),rgba(16,28,62,.75) 55%,rgba(0,190,210,.10));box-shadow:0 20px 60px rgba(0,0,0,.17)">
+  <div style="position:absolute;right:20px;top:10px;font-size:clamp(45px,8vw,85px);opacity:.15;animation:floaty 5s ease-in-out infinite;pointer-events:none">🚀</div>
+  <div class="eyebrow" style="margin-bottom:14px">✦ YOUR FIRST MONEY QUEST</div>
+  <h2 style="font-size:clamp(24px,3vw,34px);margin-bottom:10px">Ready to level up? <span style="color:#b7a1ff">🎮</span></h2>
+  <p class="description" style="font-size:14px;margin-bottom:20px">Three tiny steps. One smarter future. No finance degree required.</p>
+  <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:20px">
+    <div class="metric"><small>STEP 01 · SET UP</small><strong style="display:block;font-size:17px;margin:10px 0">🧑‍🚀 Your profile</strong><span style="color:#a9b7d6;font-size:12px">Tell LIFEOS about your money.</span></div>
+    <div class="metric"><small>STEP 02 · DISCOVER</small><strong style="display:block;font-size:17px;margin:10px 0">💎 Find a plan</strong><span style="color:#a9b7d6;font-size:12px">Explore savings and schemes.</span></div>
+    <div class="metric"><small>STEP 03 · PREVIEW</small><strong style="display:block;font-size:17px;margin:10px 0">🌌 Meet future-you</strong><span style="color:#a9b7d6;font-size:12px">See a possible future projection.</span></div>
+  </div>
+  <button onclick="showSection('profile')" style="font-size:13px;padding:16px 23px">START MY QUEST <span style="font-size:17px">→</span></button>
+</div>
+
+</section>
+
+
+
+<!-- PROFILE -->
+
+<section id="profile">
+
+<div class="eyebrow">
+LIFEOS X / PROFILE
+</div>
+
+<h1>
+Build Your Financial Digital Twin.
+</h1>
+
+<p class="description">
+Enter the assumptions used by every simulator.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Name</label>
+<input id="name" value="Adarsh">
+</div>
+
+<div>
+<label>Current Age</label>
+<input id="age" type="number" value="20">
+</div>
+
+<div>
+<label>Monthly Income ₹</label>
+<input id="income" type="number" value="2000">
+</div>
+
+<div>
+<label>Monthly Expense ₹</label>
+<input id="expense" type="number" value="1700">
+</div>
+
+<div>
+<label>Current Savings ₹</label>
+<input id="savings" type="number" value="0">
+</div>
+
+<div>
+<label>Total Debt ₹</label>
+<input id="totalDebt" type="number" value="0">
+</div>
+
+<div>
+<label>Expected Annual Return %</label>
+<input id="returnRate" type="number" value="10">
+</div>
+
+<div>
+<label>Inflation %</label>
+<input id="inflation" type="number" value="6">
+</div>
+
+</div>
+
+<button onclick="updateProfile()">
+UPDATE FINANCIAL MODEL →
+</button>
+
+</section>
+
+
+
+<!-- FUTURE -->
+
+<section id="future">
+
+<div class="eyebrow">
+LIFEOS X / FUTURE
+</div>
+
+<h1>Your Life Projection.</h1>
+
+<p class="description">
+Age-by-age model using income growth, inflation,
+investment returns and current cash flow.
+</p>
+
+
+<div class="card">
+
+<div class="timeline" id="timeline"></div>
+
+</div>
+
+</section>
+
+
+
+<!-- WHAT IF -->
+
+<section id="whatif">
+
+<div class="eyebrow">
+LIFEOS X / WHAT-IF
+</div>
+
+<h1>Change Your Future.</h1>
+
+<p class="description">
+Test income, expenses, inflation, investments,
+family shocks and lifestyle decisions together.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Income growth %</label>
+<input id="incomeGrowth" type="number" value="8">
+</div>
+
+<div>
+<label>Monthly expense ₹</label>
+<input id="whatExpense" type="number" value="1700">
+</div>
+
+<div>
+<label>Extra investment / month ₹</label>
+<input id="extraInvestment" type="number" value="5000">
+</div>
+
+<div>
+<label>Inflation %</label>
+<input id="whatInflation" type="number" value="6">
+</div>
+
+<div>
+<label>One-time business investment ₹</label>
+<input id="businessInvestment" type="number" value="0">
+</div>
+
+<div>
+<label>Emergency cost ₹</label>
+<input id="emergencyCost" type="number" value="0">
+</div>
+
+<div>
+<label>Target retirement age</label>
+<input id="retirementAge" type="number" value="60">
+</div>
+
+<div>
+<label>Extra income / month ₹</label>
+<input id="extraIncome" type="number" value="0">
+</div>
+
+<div>
+<label>Future children</label>
+<input id="futureChildren" type="number" value="0">
+</div>
+
+<div>
+<label>Education fund / child ₹</label>
+<input id="educationFund" type="number" value="1500000">
+</div>
+
+<div>
+<label>Home purchase ₹</label>
+<input id="homePurchase" type="number" value="0">
+</div>
+
+<div>
+<label>Annual insurance ₹</label>
+<input id="insurance" type="number" value="30000">
+</div>
+
+</div>
+
+<button onclick="runWhatIf()">
+SIMULATE 20+ VARIABLES →
+</button>
+
+
+<div id="whatResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- BUSINESS -->
+
+<section id="business">
+
+<div class="eyebrow">
+LIFEOS X / BUSINESS
+</div>
+
+<h1>Business Lab.</h1>
+
+<p class="description">
+Model startup capital, revenue growth, operating cost,
+taxes, reinvestment and business risk.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Starting capital ₹</label>
+<input id="startCapital" type="number" value="500000">
+</div>
+
+<div>
+<label>Monthly revenue ₹</label>
+<input id="monthlyRevenue" type="number" value="100000">
+</div>
+
+<div>
+<label>Monthly operating cost ₹</label>
+<input id="operatingCost" type="number" value="60000">
+</div>
+
+<div>
+<label>Revenue growth % / year</label>
+<input id="revenueGrowth" type="number" value="12">
+</div>
+
+<div>
+<label>Tax / other %</label>
+<input id="tax" type="number" value="20">
+</div>
+
+<div>
+<label>Business years</label>
+<input id="businessYears" type="number" value="10">
+</div>
+
+<div>
+<label>Reinvest profit %</label>
+<input id="reinvest" type="number" value="30">
+</div>
+
+<div>
+<label>Failure probability %</label>
+<input id="failure" type="number" value="10">
+</div>
+
+<div>
+<label>Personal monthly withdrawal ₹</label>
+<input id="withdrawal" type="number" value="30000">
+</div>
+
+<div>
+<label>Exit value multiple</label>
+<input id="multiple" type="number" value="4">
+</div>
+
+</div>
+
+<button onclick="runBusiness()">
+RUN BUSINESS MODEL →
+</button>
+
+<div id="businessResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- GOALS -->
+
+<section id="goals">
+
+<div class="eyebrow">
+LIFEOS X / GOALS
+</div>
+
+<h1>Goal Engine.</h1>
+
+<p class="description">
+House, education, wedding, travel, emergency fund,
+retirement and custom goals.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Target amount ₹</label>
+<input id="targetAmount" type="number" value="10000000">
+</div>
+
+<div>
+<label>Already invested ₹</label>
+<input id="alreadyInvested" type="number" value="100000">
+</div>
+
+<div>
+<label>Monthly contribution ₹</label>
+<input id="monthlyContribution" type="number" value="20000">
+</div>
+
+<div>
+<label>Expected return %</label>
+<input id="expectedReturn" type="number" value="12">
+</div>
+
+<div>
+<label>Target years</label>
+<input id="targetYears" type="number" value="10">
+</div>
+
+<div>
+<label>Goal inflation %</label>
+<input id="goalInflation" type="number" value="6">
+</div>
+
+</div>
+
+<button onclick="calculateGoal()">
+CALCULATE GOAL →
+</button>
+
+<div id="goalResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- FAMILY -->
+
+<section id="family">
+
+<div class="eyebrow">
+LIFEOS X / FAMILY
+</div>
+
+<h1>Family & Life Planner.</h1>
+
+<p class="description">
+Model children, education, healthcare, parents support,
+weddings and changing expenses across decades.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Number of children</label>
+<input id="children" type="number" value="2">
+</div>
+
+<div>
+<label>Education / child ₹</label>
+<input id="educationChild" type="number" value="1500000">
+</div>
+
+<div>
+<label>Wedding / child ₹</label>
+<input id="weddingChild" type="number" value="1000000">
+</div>
+
+<div>
+<label>Healthcare / year ₹</label>
+<input id="healthcare" type="number" value="100000">
+</div>
+
+<div>
+<label>Family monthly expense ₹</label>
+<input id="familyExpense" type="number" value="30000">
+</div>
+
+<div>
+<label>Parents support / month ₹</label>
+<input id="parentsSupport" type="number" value="10000">
+</div>
+
+<div>
+<label>Planning horizon years</label>
+<input id="familyYears" type="number" value="25">
+</div>
+
+<div>
+<label>Inflation %</label>
+<input id="familyInflation" type="number" value="6">
+</div>
+
+</div>
+
+<button onclick="buildFamily()">
+BUILD FAMILY MODEL →
+</button>
+
+<div id="familyResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- STRESS -->
+
+<section id="stress">
+
+<div class="eyebrow">
+LIFEOS X / STRESS TEST
+</div>
+
+<h1>Stress Test.</h1>
+
+<p class="description">
+Test unexpected income loss, emergency expenses
+and high inflation.
+</p>
+
+<div class="card">
+
+<button onclick="runStress()">
+RUN STRESS SCENARIO →
+</button>
+
+<div id="stressResult" class="result"></div>
+
+</div>
+
+</section>
+
+
+
+<!-- DEBT -->
+
+<section id="debt">
+
+<div class="eyebrow">
+LIFEOS X / DEBT
+</div>
+
+<h1>Debt Destroyer.</h1>
+
+<p class="description">
+Compare repayment strategies and estimate interest
+saved by accelerating debt.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Debt balance ₹</label>
+<input id="debtBalance" type="number" value="500000">
+</div>
+
+<div>
+<label>Interest %</label>
+<input id="debtInterest" type="number" value="12">
+</div>
+
+<div>
+<label>Monthly payment ₹</label>
+<input id="debtPayment" type="number" value="15000">
+</div>
+
+<div>
+<label>Extra payment ₹/month</label>
+<input id="extraDebt" type="number" value="5000">
+</div>
+
+<div>
+<label>Current remaining months</label>
+<input id="remainingMonths" type="number" value="60">
+</div>
+
+</div>
+
+<button onclick="destroyDebt()">
+COMPARE DEBT PLAN →
+</button>
+
+<div id="debtResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- FIRE -->
+
+<section id="fire">
+
+<div class="eyebrow">
+LIFEOS X / FIRE
+</div>
+
+<h1>FIRE Planner.</h1>
+
+<p class="description">
+Estimate a retirement corpus from spending,
+inflation and withdrawal assumptions.
+</p>
+
+
+<div class="card grid">
+
+<div>
+<label>Monthly spending ₹</label>
+<input id="fireSpending" type="number" value="50000">
+</div>
+
+<div>
+<label>Current corpus ₹</label>
+<input id="fireCorpus" type="number" value="0">
+</div>
+
+<div>
+<label>Years to retirement</label>
+<input id="fireYears" type="number" value="25">
+</div>
+
+<div>
+<label>Expected return %</label>
+<input id="fireReturn" type="number" value="10">
+</div>
+
+</div>
+
+<button onclick="calculateFire()">
+CALCULATE FIRE →
+</button>
+
+<div id="fireResult" class="card result"></div>
+
+</section>
+
+
+
+<!-- COMPARE -->
+
+<section id="compare">
+
+<div class="eyebrow">
+LIFEOS X / COMPARE
+</div>
+
+<h1>Scenario Compare.</h1>
+
+<p class="description">
+Compare your current financial situation
+with an alternate scenario.
+</p>
+
+<div class="card">
+
+<button onclick="compareScenarios()">
+COMPARE SCENARIOS →
+</button>
+
+<div id="compareResult" class="result"></div>
+
+</div>
+
+</section>
+
+
+<!-- GOVERNMENT INVESTMENT HUB -->
+<section id="investments">
+  <div class="eyebrow">LIFEOS X / GOVERNMENT INVESTMENT HUB</div>
+  <h1>Explore. Compare. Plan.</h1>
+  <p class="description">Explore government-backed savings, pension, and securities options without leaving LIFEOS X. Search schemes, filter by type, estimate returns, and open official sources for current rules.</p>
+  <div class="card" style="margin-bottom:18px">
+    <div class="grid">
+      <div><label for="schemeSearch">Search schemes</label><input id="schemeSearch" type="text" placeholder="Try PPF, student, pension..." oninput="renderSchemes()"></div>
+      <div><label for="schemeCategory">Filter category</label><select id="schemeCategory" onchange="renderSchemes()"><option value="all">All categories</option><option value="Small Savings">Post Office / Small Savings</option><option value="Pension">Pension & retirement</option><option value="Government Securities">Government securities</option><option value="Protection">Insurance / protection</option></select></div>
+    </div>
+    <p class="description" style="font-size:13px;margin:14px 0 0">Small-savings rates shown below are listed for 1 Oct–31 Dec 2026 and may change by quarter. Market-linked products do not have guaranteed returns. Check eligibility, limits, tax treatment and terms on the official site before investing.</p>
+  </div>
+  <div id="schemeCount" class="description" style="margin-bottom:12px"></div>
+  <div id="schemeGrid" class="scheme-grid"></div>
+  <div class="card" style="margin-top:18px">
+    <h2>Investment Maturity Calculator</h2><p class="description">Illustrative estimate for a lump sum or recurring monthly investment. This calculator does not connect to or open an account.</p>
+    <div class="grid">
+      <div><label for="invAmount">Initial investment ₹</label><input id="invAmount" type="number" min="0" value="10000"></div>
+      <div><label for="invMonthly">Monthly contribution ₹</label><input id="invMonthly" type="number" min="0" value="1000"></div>
+      <div><label for="invRate">Assumed annual return %</label><input id="invRate" type="number" min="0" max="50" step="0.1" value="7.1"></div>
+      <div><label for="invYears">Investment period (years)</label><input id="invYears" type="number" min="1" max="60" value="15"></div>
+    </div>
+    <button onclick="calculateInvestment()">ESTIMATE MATURITY →</button>
+    <div id="investmentResult" class="card result"></div>
+  </div>
+</section>
+
+<!-- SMART TOOLS -->
+<section id="tools">
+  <div class="eyebrow">LIFEOS X / SMART TOOLS</div>
+  <h1>Your Everyday Money Toolkit.</h1>
+  <p class="description">Practical calculators for planning goals, understanding inflation, and building a safety buffer.</p>
+  <div class="card grid">
+    <div><label for="sipMonthly">SIP / monthly investment ₹</label><input id="sipMonthly" type="number" min="0" value="3000"></div>
+    <div><label for="sipRate">Assumed annual return %</label><input id="sipRate" type="number" min="0" max="50" step="0.1" value="10"></div>
+    <div><label for="sipYears">Investment period (years)</label><input id="sipYears" type="number" min="1" max="60" value="10"></div>
+    <div><label for="inflationAmount">Today's cost ₹</label><input id="inflationAmount" type="number" min="0" value="100000"></div>
+    <div><label for="inflationRateTool">Inflation % per year</label><input id="inflationRateTool" type="number" min="0" max="50" step="0.1" value="6"></div>
+    <div><label for="inflationYearsTool">Years in future</label><input id="inflationYearsTool" type="number" min="0" max="80" value="10"></div>
+    <div><label for="essentialMonthly">Essential monthly expenses ₹</label><input id="essentialMonthly" type="number" min="0" value="15000"></div>
+    <div><label for="emergencyMonths">Emergency fund target (months)</label><input id="emergencyMonths" type="number" min="1" max="24" value="6"></div>
+  </div>
+  <button onclick="runSmartTools()">CALCULATE ALL TOOLS →</button>
+  <div id="smartToolsResult" class="card result"></div>
+  <div class="card" style="margin-top:18px"><h2>More planning areas</h2><div class="tool-grid">
+    <div class="metric"><strong>Tax readiness</strong><span>Track deductions and taxable income with a year-specific checklist; confirm rules with official tax guidance.</span></div>
+    <div class="metric"><strong>Insurance checklist</strong><span>Review health, term-life and accident protection needs. Not an insurance quote or personalised advice.</span></div>
+    <div class="metric"><strong>Goal tracker</strong><span>Connect a target amount, target date and monthly saving to your existing Goals module.</span></div>
+    <div class="metric"><strong>Retirement readiness</strong><span>Use the existing FIRE module to estimate a retirement corpus and test different assumptions.</span></div>
+  </div></div>
+</section>
+
+
+</div>
+
+
+<footer>
+LIFEOS X — Your money. Your future. Simulated.
+Estimates are illustrative, not financial advice.
+</footer>
+
+
+
+
+<!-- GELLO assistant: browser-native voice + guided website commands -->
+<button id="gello-launcher" type="button" aria-label="Open GELLO voice assistant" onclick="toggleGello(true)"><span class="gello-launch-inner"><span class="gello-orb">✦</span><span>Talk to GELLO <small style="display:block;font-size:10px;opacity:.78;font-weight:700">YOUR MONEY SIDEKICK</small></span><span aria-hidden="true">✧</span></span></button>
+<section id="gello-panel" aria-label="GELLO assistant" aria-hidden="true">
+  <div class="gello-head"><div class="gello-avatar" id="gello-avatar">✦</div><div><h3>GELLO <span style="color:#69edff">VOICE</span></h3><small id="gello-status">● READY TO TALK</small></div><button class="gello-close" type="button" aria-label="Close GELLO" onclick="toggleGello(false)">×</button></div>
+  <div style="display:flex;gap:8px;align-items:center;padding:9px 13px;border-bottom:1px solid #20364b;background:#091422"><label for="gello-language" style="font-size:11px;color:#9bb1c8">VOICE LANGUAGE</label><select id="gello-language" style="margin:0;flex:1;padding:7px 9px;border-radius:9px;background:#101e2e;color:#eaf6ff;border:1px solid #294158;font-size:12px"><option value="en-IN">English (India)</option><option value="hi-IN">Hindi / Hinglish</option></select><button type="button" onclick="gelloStopVoice()" style="margin:0;padding:7px 9px;border-radius:9px;background:#101e2e;color:#bcefff;border:1px solid #294158;font-size:11px">■ Stop voice</button></div>
+  <div id="gello-messages" aria-live="polite"></div>
+  <div class="gello-quick"><button type="button" onclick="gelloQuick('Open government investment schemes')">🏛️ Govt schemes</button><button type="button" onclick="gelloQuick('Calculate my net worth')">💰 Net worth</button><button type="button" onclick="gelloQuick('Open future projection')">🚀 Future</button><button type="button" onclick="gelloQuick('Open smart tools')">🧮 Smart tools</button></div>
+  <div class="gello-input-row"><input id="gello-input" type="text" placeholder="Ask GELLO anything…" aria-label="Message GELLO" onkeydown="if(event.key==='Enter')gelloSend()"><button id="gello-mic" class="gello-mic" type="button" aria-label="Speak to GELLO" onclick="gelloListen()">🎙️</button><button type="button" onclick="gelloSend()" aria-label="Send message">➤</button></div>
+  <div class="gello-note">Browser voice mode: mic input + spoken replies. This version uses built-in responses, not live AI yet. Financial figures are estimates.</div>
+</section>
+
+<script>
+
+/* SECTION SLIDES */
+function showSection(id){
+    document.querySelectorAll('section').forEach(section=>{
+        const active = section.id===id;
+        section.classList.toggle('active-section', active);
+        if(active){ section.style.animation='none'; void section.offsetWidth; section.style.animation=''; }
+    });
+
+    document.querySelectorAll('#mainNav button').forEach(button=>{
+        button.classList.toggle('active', button.dataset.section===id);
+    });
+
+    window.scrollTo({top:0, behavior:'instant'});
+    history.replaceState(null, '', '#' + id);
+}
+
+/* BASIC HELPERS */
+
+function value(id){
+    return Number(document.getElementById(id).value) || 0;
+}
+
+function money(number){
+    return "₹" + Math.round(number).toLocaleString("en-IN");
+}
+
+function show(id,html){
+    const element=document.getElementById(id);
+    element.innerHTML=html;
+    element.classList.add("show");
+}
+
+
+/* PROFILE */
+
+function updateProfile(){
+
+    const income=value("income");
+    const expense=value("expense");
+    const savings=value("savings");
+    const debt=value("totalDebt");
+
+    const flow=income-expense;
+
+    document.getElementById("netWorth").innerText=
+        money(savings-debt);
+
+    document.getElementById("monthlyFlow").innerText=
+        money(flow);
+
+    document.getElementById("statusText").innerText=
+        "Current age " + value("age") +
+        " · Income " + money(income) +
+        " · Expense " + money(expense);
+
+    createTimeline();
+
+    alert("Financial model updated!");
+}
+
+
+/* FUTURE PROJECTION */
+
+function createTimeline(){
+
+    const age=value("age") || 20;
+    const income=value("income");
+    const expense=value("expense");
+    const savings=value("savings");
+
+    const returnRate=value("returnRate")/100;
+    const growth=.08;
+
+    let html="";
+
+    [0,10,20,30,40].forEach(years=>{
+
+        let futureIncome=
+            income*Math.pow(1+growth,years);
+
+        let futureExpense=
+            expense*Math.pow(1+.06,years);
+
+        let yearlySaving=
+            Math.max(0,futureIncome-futureExpense)*12;
+
+        let projected=
+            savings*Math.pow(1+returnRate,years)
+            + yearlySaving*years;
+
+        html += `
+
+        <div class="metric">
+
+            <small>AGE ${age+years}</small>
+
+            <strong>
+                ${money(projected)}
+            </strong>
+
+            <span class="green">
+                Projected net worth
+            </span>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("timeline").innerHTML=html;
+}
+
+
+/* WHAT IF */
+
+function runWhatIf(){
+
+    const income=value("income");
+    const expense=value("whatExpense");
+
+    const extraInvestment=value("extraInvestment");
+    const extraIncome=value("extraIncome");
+
+    const business=value("businessInvestment");
+    const emergency=value("emergencyCost");
+
+    const children=value("futureChildren");
+    const education=value("educationFund");
+
+    const home=value("homePurchase");
+
+    const monthly=
+        income-expense+
+        extraIncome+
+        extraInvestment;
+
+    const tenYear=
+        monthly*12*10-
+        business-
+        emergency-
+        children*education-
+        home;
+
+    show("whatResult",`
+
+        <h2>What-If Result</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>MONTHLY EFFECT</small>
+                <strong>${money(monthly)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>10 YEAR MODEL</small>
+                <strong>${money(tenYear)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>RETIREMENT AGE</small>
+                <strong>${value("retirementAge")}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* BUSINESS */
+
+function runBusiness(){
+
+    let capital=value("startCapital");
+    let revenue=value("monthlyRevenue");
+    const cost=value("operatingCost");
+
+    const growth=value("revenueGrowth")/100;
+    const tax=value("tax")/100;
+    const years=value("businessYears");
+
+    let lastProfit=0;
+
+    for(let year=0;year<years;year++){
+
+        let profit=
+            (revenue-cost)*12;
+
+        profit=
+            profit*(1-tax);
+
+        lastProfit=profit;
+
+        capital += profit;
+
+        revenue=
+            revenue*(1+growth);
+    }
+
+    const exit=
+        lastProfit*value("multiple");
+
+    show("businessResult",`
+
+        <h2>Business Model Result</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>ENDING CAPITAL</small>
+                <strong>${money(capital)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>LAST YEAR PROFIT</small>
+                <strong>${money(lastProfit)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>ESTIMATED EXIT VALUE</small>
+                <strong>${money(exit)}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* GOAL */
+
+function calculateGoal(){
+
+    const target=value("targetAmount");
+    const invested=value("alreadyInvested");
+    const monthly=value("monthlyContribution");
+
+    const rate=value("expectedReturn")/1200;
+    const years=value("targetYears");
+
+    let future=
+
+        invested*
+        Math.pow(1+rate,years*12)
+
+        +
+
+        monthly*
+        (
+            (Math.pow(1+rate,years*12)-1)
+            /rate
+        );
+
+    const gap=
+        Math.max(0,target-future);
+
+    show("goalResult",`
+
+        <h2>Goal Projection</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>PROJECTED VALUE</small>
+                <strong>${money(future)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>TARGET</small>
+                <strong>${money(target)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>GAP</small>
+                <strong>${money(gap)}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* FAMILY */
+
+function buildFamily(){
+
+    const children=value("children");
+
+    const education=
+        value("educationChild");
+
+    const wedding=
+        value("weddingChild");
+
+    const healthcare=
+        value("healthcare");
+
+    const monthly=
+        value("familyExpense")+
+        value("parentsSupport");
+
+    const years=value("familyYears");
+
+    const basicChild=
+        children*(education+wedding);
+
+    const familySpend=
+        monthly*12*years;
+
+    const healthcareCost=
+        healthcare*years;
+
+    const total=
+        basicChild+
+        familySpend+
+        healthcareCost;
+
+    show("familyResult",`
+
+        <h2>Family Cost Projection</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>CHILDREN COST</small>
+                <strong>${money(basicChild)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>FAMILY SPENDING</small>
+                <strong>${money(familySpend)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>TOTAL MODEL</small>
+                <strong>${money(total)}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* STRESS TEST */
+
+function runStress(){
+
+    const income=value("income");
+
+    const stressIncome=
+        income*.6;
+
+    const expense=
+        value("expense")*1.2;
+
+    const monthly=
+        stressIncome-expense;
+
+    show("stressResult",`
+
+        <div class="status">
+
+            <small>STRESS SCENARIO</small>
+
+            <strong class="cyan">
+                ${monthly>=0 ? "Cash flow survives" : "Cash flow deficit"}
+            </strong>
+
+            <p class="description">
+                Income reduced by 40% and expenses increased by 20%.
+                Estimated monthly flow:
+                ${money(monthly)}
+            </p>
+
+        </div>
+
+    `);
+}
+
+
+/* DEBT */
+
+function destroyDebt(){
+
+    let balance=value("debtBalance");
+
+    const rate=
+        value("debtInterest")/1200;
+
+    const payment=
+        value("debtPayment")+
+        value("extraDebt");
+
+    let months=0;
+    let interest=0;
+
+    while(balance>0 && months<600){
+
+        const monthlyInterest=
+            balance*rate;
+
+        interest+=monthlyInterest;
+
+        balance=
+            balance+
+            monthlyInterest-
+            payment;
+
+        months++;
+
+    }
+
+    show("debtResult",`
+
+        <h2>Accelerated Debt Plan</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>PAYOFF TIME</small>
+                <strong>${months} months</strong>
+            </div>
+
+            <div class="metric">
+                <small>TOTAL INTEREST</small>
+                <strong>${money(interest)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>MONTHLY PAYMENT</small>
+                <strong>${money(payment)}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* FIRE */
+
+function calculateFire(){
+
+    const spending=
+        value("fireSpending")*12;
+
+    const years=
+        value("fireYears");
+
+    const returnRate=
+        value("fireReturn")/100;
+
+    const futureSpending=
+        spending*Math.pow(1.06,years);
+
+    const corpus=
+        futureSpending/.04;
+
+    const currentCorpus=
+        value("fireCorpus")*
+        Math.pow(1+returnRate,years);
+
+    show("fireResult",`
+
+        <h2>FIRE Projection</h2>
+
+        <br>
+
+        <div class="result-grid">
+
+            <div class="metric">
+                <small>FUTURE ANNUAL SPENDING</small>
+                <strong>${money(futureSpending)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>ILLUSTRATIVE CORPUS</small>
+                <strong>${money(corpus)}</strong>
+            </div>
+
+            <div class="metric">
+                <small>CURRENT CORPUS GROWTH</small>
+                <strong>${money(currentCorpus)}</strong>
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+/* COMPARE */
+
+function compareScenarios(){
+
+    const income=
+        value("income");
+
+    const expense=
+        value("expense");
+
+    const base=
+        income-expense;
+
+    const alternate=
+        base+
+        value("extraInvestment");
+
+    show("compareResult",`
+
+        <div class="result-grid">
+
+            <div class="metric">
+
+                <small>BASELINE</small>
+
+                <strong>
+                    ${money(base)}
+                </strong>
+
+            </div>
+
+
+            <div class="metric">
+
+                <small>ALTERNATE</small>
+
+                <strong>
+                    ${money(alternate)}
+                </strong>
+
+            </div>
+
+
+            <div class="metric">
+
+                <small>DIFFERENCE</small>
+
+                <strong>
+                    ${money(alternate-base)}
+                </strong>
+
+            </div>
+
+        </div>
+
+    `);
+}
+
+
+
+
+/* GOVERNMENT INVESTMENT DIRECTORY: rates/terms must be checked at official sources */
+const schemes = [
+ {name:'Post Office Savings Account',category:'Small Savings',rate:'4.0% p.a.',kind:'Savings account',who:'General public',summary:'Accessible savings account for short-term liquidity; interest rate may be revised.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'National Savings Recurring Deposit (5-year RD)',category:'Small Savings',rate:'6.7% p.a.',kind:'Monthly saving',who:'Eligible individuals',summary:'Recurring monthly deposits with quarterly compounding; check deposit and premature-closure rules.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'1-Year Post Office Time Deposit',category:'Small Savings',rate:'6.9% p.a.',kind:'Fixed tenure',who:'Eligible individuals',summary:'Fixed-tenure deposit; interest and premature-closure conditions apply.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'2-Year Post Office Time Deposit',category:'Small Savings',rate:'7.0% p.a.',kind:'Fixed tenure',who:'Eligible individuals',summary:'Two-year deposit option with quarterly interest calculation.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'3-Year Post Office Time Deposit',category:'Small Savings',rate:'7.1% p.a.',kind:'Fixed tenure',who:'Eligible individuals',summary:'Three-year deposit option; confirm current rules and tax treatment.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'5-Year Post Office Time Deposit',category:'Small Savings',rate:'7.5% p.a.',kind:'Fixed tenure',who:'Eligible individuals',summary:'Five-year deposit; may qualify for tax deduction subject to prevailing rules.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'Post Office Monthly Income Scheme (MIS)',category:'Small Savings',rate:'7.4% p.a.',kind:'Monthly payout',who:'Eligible individuals / joint holders',summary:'Designed to provide monthly interest payouts over its tenure; investment limits apply.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'Senior Citizens Savings Scheme (SCSS)',category:'Small Savings',rate:'8.2% p.a.',kind:'Retirement income',who:'Eligible senior citizens',summary:'Government-backed retirement savings option for eligible age groups; deposit limits and rules apply.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'Public Provident Fund (PPF)',category:'Small Savings',rate:'7.1% p.a.',kind:'Long-term savings',who:'Eligible resident individuals',summary:'Long-term savings with a 15-year maturity framework and annual contribution limits.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'Sukanya Samriddhi Account (SSA)',category:'Small Savings',rate:'8.2% p.a.',kind:'Girl-child savings',who:'Eligible guardian for a girl child',summary:'Long-term savings account for an eligible girl child; age, deposit and withdrawal rules apply.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'National Savings Certificate (NSC)',category:'Small Savings',rate:'7.7% p.a.',kind:'Fixed-term certificate',who:'Eligible individuals',summary:'Five-year savings certificate with interest compounded annually and payable at maturity.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'Kisan Vikas Patra (KVP)',category:'Small Savings',rate:'7.5% p.a.',kind:'Long-term certificate',who:'Eligible individuals',summary:'Current published terms indicate maturity in 115 months; verify the applicable issue terms.',url:'https://www.indiapost.gov.in/banking-services/savings'},
+ {name:'National Pension System (NPS)',category:'Pension',rate:'Market-linked',kind:'Retirement pension',who:'Eligible subscribers',summary:'Retirement-focused account invested in market-linked assets; returns are not guaranteed.',url:'https://npstrust.org.in/'},
+ {name:'Atal Pension Yojana (APY)',category:'Pension',rate:'Defined pension benefit',kind:'Pension',who:'Eligibility and age conditions apply',summary:'Government-backed pension scheme with eligibility, contribution and enrolment conditions.',url:'https://www.npscra.nsdl.co.in/scheme-details.php'},
+ {name:'Employees’ Provident Fund (EPF)',category:'Pension',rate:'Rate notified periodically',kind:'Workplace retirement',who:'Covered employees / establishments',summary:'Retirement savings administered through EPFO; the applicable rate is announced for each period.',url:'https://www.epfindia.gov.in/'},
+ {name:'Voluntary Provident Fund (VPF)',category:'Pension',rate:'Linked to EPF rules',kind:'Additional retirement saving',who:'Eligible EPF members',summary:'Voluntary additional employee contribution through the EPF framework; check employer process and limits.',url:'https://www.epfindia.gov.in/'},
+ {name:'PM Shram Yogi Maandhan (PM-SYM)',category:'Pension',rate:'Pension scheme',kind:'Social security pension',who:'Eligible unorganised workers',summary:'Contributory pension scheme with eligibility and monthly contribution conditions.',url:'https://maandhan.in/'},
+ {name:'RBI Retail Direct – Government Securities',category:'Government Securities',rate:'Auction / market yield',kind:'G-Secs',who:'Eligible retail investors',summary:'Access government securities through the RBI Retail Direct platform; yields and prices vary by security.',url:'https://rbiretaildirect.org.in/'},
+ {name:'RBI Floating Rate Savings Bonds',category:'Government Securities',rate:'Floating; check current notification',kind:'Savings bond',who:'Eligible investors',summary:'Government savings bond with a floating coupon reset under the notified terms; check lock-in and tax rules.',url:'https://www.rbi.org.in/'},
+ {name:'Treasury Bills (via RBI Retail Direct)',category:'Government Securities',rate:'Auction yield',kind:'Short-term government security',who:'Eligible retail investors',summary:'Short-term government securities sold at a discount; returns depend on purchase price and maturity value.',url:'https://rbiretaildirect.org.in/'},
+ {name:'Government Dated Securities (G-Secs)',category:'Government Securities',rate:'Market-linked yield',kind:'Government bond',who:'Eligible retail investors',summary:'Central government bonds with defined terms; market prices can rise or fall before maturity.',url:'https://rbiretaildirect.org.in/'},
+ {name:'Sovereign Gold Bond (SGB) – existing issues',category:'Government Securities',rate:'Issue terms apply',kind:'Gold-linked bond',who:'Existing holders / availability depends on new issuance',summary:'Gold-linked government bond; do not assume fresh issues are currently open. Check official announcements and exchange availability.',url:'https://www.rbi.org.in/'},
+ {name:'Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)',category:'Protection',rate:'Insurance cover, not investment return',kind:'Life insurance',who:'Eligibility and age conditions apply',summary:'Low-cost life insurance protection; it is not an investment or wealth-growth product.',url:'https://www.jansuraksha.gov.in/'},
+ {name:'Pradhan Mantri Suraksha Bima Yojana (PMSBY)',category:'Protection',rate:'Insurance cover, not investment return',kind:'Accident insurance',who:'Eligibility and age conditions apply',summary:'Accident insurance protection; it is not an investment or wealth-growth product.',url:'https://www.jansuraksha.gov.in/'},
+ {name:'Ayushman Bharat PM-JAY',category:'Protection',rate:'Health cover, not investment return',kind:'Health protection',who:'Eligibility based on scheme criteria',summary:'Eligible families may receive health cover under scheme rules; this is protection, not an investment plan.',url:'https://pmjay.gov.in/'},
+ {name:'Pradhan Mantri Jan-Dhan Yojana (PMJDY)',category:'Small Savings',rate:'Bank account terms apply',kind:'Financial inclusion',who:'Eligible individuals',summary:'Basic banking and financial-inclusion programme; benefits depend on account and eligibility terms.',url:'https://pmjdy.gov.in/'}
+];
+
+function renderSchemes(){
+ const q=(document.getElementById('schemeSearch')?.value||'').toLowerCase().trim();
+ const cat=document.getElementById('schemeCategory')?.value||'all';
+ const filtered=schemes.filter(x=>(cat==='all'||x.category===cat)&&[x.name,x.category,x.kind,x.who,x.summary].join(' ').toLowerCase().includes(q));
+ document.getElementById('schemeCount').textContent=`Showing ${filtered.length} of ${schemes.length} financial schemes and programmes.`;
+ document.getElementById('schemeGrid').innerHTML=filtered.map(x=>`<article class="scheme-card"><div class="scheme-meta"><span class="scheme-tag">${x.category}</span><span class="scheme-tag">${x.kind}</span></div><h3>${x.name}</h3><div class="scheme-rate">${x.rate}</div><p><b>Who may qualify:</b> ${x.who}</p><p>${x.summary}</p><a href="${x.url}" target="_blank" rel="noopener noreferrer">Official information ↗</a></article>`).join('')||'<div class="card">No matching schemes. Try a different search.</div>';
+}
+function calculateInvestment(){
+ const initial=Math.max(0,value('invAmount')), monthly=Math.max(0,value('invMonthly')), rate=Math.max(0,value('invRate'))/1200, months=Math.max(1,Math.min(720,Math.round(value('invYears')*12)));
+ const initialFuture=initial*Math.pow(1+rate,months);
+ const monthlyFuture=rate===0?monthly*months:monthly*(Math.pow(1+rate,months)-1)/rate;
+ const maturity=initialFuture+monthlyFuture, contributed=initial+monthly*months;
+ show('investmentResult',`<h3>Illustrative maturity estimate</h3><div class="result-grid"><div class="metric"><small>ESTIMATED VALUE</small><strong>${money(maturity)}</strong></div><div class="metric"><small>TOTAL CONTRIBUTION</small><strong>${money(contributed)}</strong></div><div class="metric"><small>ESTIMATED GROWTH</small><strong>${money(maturity-contributed)}</strong></div></div><p class="description" style="margin:14px 0 0">Assumes a constant monthly rate and end-of-month contributions. Actual scheme calculation, tax, fees and payout rules may differ.</p>`);
+}
+function runSmartTools(){
+ const monthly=Math.max(0,value('sipMonthly')), rate=Math.max(0,value('sipRate'))/1200, months=Math.max(1,Math.min(720,Math.round(value('sipYears')*12)));
+ const sip=rate===0?monthly*months:monthly*(Math.pow(1+rate,months)-1)/rate;
+ const contribution=monthly*months;
+ const cost=Math.max(0,value('inflationAmount'))*Math.pow(1+Math.max(0,value('inflationRateTool'))/100,Math.max(0,value('inflationYearsTool')));
+ const emergency=Math.max(0,value('essentialMonthly'))*Math.max(1,value('emergencyMonths'));
+ show('smartToolsResult',`<h2>Your planning estimates</h2><br><div class="result-grid"><div class="metric"><small>PROJECTED SIP VALUE</small><strong>${money(sip)}</strong><p>Contributions: ${money(contribution)}</p><p>Illustrative growth: ${money(sip-contribution)}</p></div><div class="metric"><small>FUTURE COST</small><strong>${money(cost)}</strong><p>Estimated cost after ${value('inflationYearsTool')} years.</p></div><div class="metric"><small>EMERGENCY FUND TARGET</small><strong>${money(emergency)}</strong><p>Based on essential expenses and selected months.</p></div></div><p class="description" style="margin:14px 0 0">These are estimates, not guaranteed returns or personalised financial advice.</p>`);
+}
+
+
+/* GELLO — browser-only voice assistant, structured for later AI backend integration */
+let gelloRecognition=null;
+let gelloLastLanguage='en-IN';
+function gelloLanguage(){return document.getElementById('gello-language')?.value||'en-IN';}
+function gelloStatus(text){const el=document.getElementById('gello-status');if(el)el.textContent='● '+text.toUpperCase();}
+function toggleGello(open){
+ const panel=document.getElementById('gello-panel'); if(!panel)return;
+ panel.classList.toggle('open',!!open); panel.setAttribute('aria-hidden',open?'false':'true');
+ if(open && !document.getElementById('gello-messages').children.length){gelloAdd('bot',gelloLanguage()==='hi-IN'?'Namaste! Main GELLO hoon ✨ Mic dabao aur Hindi ya Hinglish mein bolo. Main website ke sections khol sakta hoon, profile ke numbers samjha sakta hoon aur calculators tak le ja sakta hoon.':'Hi! I’m GELLO ✨ Press the mic and speak. I can navigate LIFEOS, explain your entered profile numbers, and guide you to calculators and investment schemes.');}
+ if(open)setTimeout(()=>document.getElementById('gello-input')?.focus(),80);
+}
+function gelloAdd(role,text){const box=document.getElementById('gello-messages');if(!box)return;const el=document.createElement('div');el.className='gello-msg '+role;el.textContent=text;box.appendChild(el);box.scrollTop=box.scrollHeight;}
+function gelloQuick(text){document.getElementById('gello-input').value=text;gelloSend();}
+function gelloStopVoice(){if('speechSynthesis' in window)window.speechSynthesis.cancel();if(gelloRecognition){try{gelloRecognition.stop()}catch(e){}gelloRecognition=null;}const mic=document.getElementById('gello-mic');if(mic){mic.classList.remove('listening');mic.textContent='🎙️';}gelloStatus('Ready to talk');}
+function gelloSay(text){if(!('speechSynthesis' in window)){gelloStatus('Voice output unavailable');return;}try{window.speechSynthesis.cancel();const lang=gelloLanguage();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=lang==='hi-IN'?0.94:1.0;u.pitch=1.05;u.onstart=()=>gelloStatus('Speaking');u.onend=()=>gelloStatus('Ready to talk');u.onerror=()=>gelloStatus('Ready to talk');window.speechSynthesis.speak(u);}catch(e){gelloStatus('Voice output unavailable');}}
+function gelloResponse(raw){
+ const q=raw.toLowerCase().replace(/[?!.,]/g,' ').trim();
+ const hindi=gelloLanguage()==='hi-IN';
+ let answer=hindi?'Main abhi browser-only voice assistant hoon. Main website navigate kar sakta hoon aur kuch profile estimates bata sakta hoon; general sawalon ke liye live AI backend abhi connected nahi hai.':'I’m currently running in browser voice mode. I can navigate the website and explain a few profile estimates, but a live AI backend is not connected yet.';
+ const routes=[['dashboard',['dashboard','home','डैशबोर्ड','होम','ghar kholo']],['profile',['profile','my profile','प्रोफाइल','meri profile']],['future',['future','projection','future projection','भविष्य','future kholo','mera future']],['whatif',['what-if','what if','scenario','सिमुलेशन','what if kholo']],['business',['business','startup','बिजनेस','व्यापार']],['goals',['goal','goals','लक्ष्य','goals kholo']],['family',['family','children','फैमिली','परिवार']],['stress',['stress test','emergency scenario','stress test kholo']],['debt',['debt','loan','लोन','कर्ज','debt kholo']],['fire',['fire planner','retirement planner','retirement','retirement kholo']],['compare',['compare','comparison','तुलना','compare scenarios']],['investments',['government investment','government scheme','government schemes','govt scheme','govt schemes','investment hub','investment schemes','scheme hub','sarkari yojana','सरकारी योजना','ppf','nsc','post office scheme']],['tools',['smart tools','calculators','calculator','sip calculator','inflation calculator','कैलकुलेटर','tools kholo']]];
+ let matched=null;for(const [id,terms] of routes){if(terms.some(t=>q.includes(t))){matched=id;break;}}
+ if(matched){showSection(matched);const labels={dashboard:'Dashboard',profile:'Profile',future:'Future Projection',whatif:'What-If Simulator',business:'Business Lab',goals:'Goal Engine',family:'Family Planner',stress:'Stress Test',debt:'Debt Planner',fire:'FIRE Planner',compare:'Scenario Compare',investments:'Government Investment Hub',tools:'Smart Tools'};answer=hindi?'Ho gaya! Maine '+labels[matched]+' khol diya hai. Ab wahan details bharo aur tools use karo.':'Done! I opened '+labels[matched]+'. Enter your details there to use its tools.';}
+ else if(q.includes('net worth')||q.includes('worth am i')||q.includes('नेट वर्थ')||q.includes('meri total value')){const savings=typeof value==='function'?Number(value('savings'))||0:0;const debt=typeof value==='function'?Number(value('totalDebt'))||0:0;const income=typeof value==='function'?Number(value('income'))||0:0;const expense=typeof value==='function'?Number(value('expense'))||0:0;answer=hindi?'Aapki profile ke entered numbers ke hisaab se savings minus debt, estimated net worth '+money(savings-debt)+' hai. Monthly cash flow '+money(income-expense)+' hai. Yeh sirf entered savings aur debt ka estimate hai; doosre assets ismein shamil nahi hain.':'Using your entered Profile values, estimated net worth is '+money(savings-debt)+', and monthly cash flow is '+money(income-expense)+'. This estimate uses entered savings minus debt and does not include other assets.';}
+ else if(q.includes('monthly saving')||q.includes('cash flow')||q.includes('bachat')||q.includes('saving kitni')||q.includes('monthly bachat')){const flow=(Number(value('income'))||0)-(Number(value('expense'))||0);answer=hindi?'Aapki profile ke hisaab se monthly cash flow '+money(flow)+' hai. '+(flow>=0?'Yaani entered income, expenses se itni zyada hai.':'Aapke entered expenses income se zyada hain; budget check karo.'):'Based on your Profile, monthly cash flow is '+money(flow)+'. '+(flow>=0?'Your entered income is higher than expenses by this amount.':'Your entered expenses exceed income; review your budget.');}
+ else if(q.includes('hello')||q==='hi'||q==='hey'||q.includes('help')||q.includes('what can you do')||q.includes('kya kar sakte')||q.includes('madad')){answer=hindi?'Main LIFEOS ke sections khol sakta hoon, profile se net worth aur monthly cash flow estimate kar sakta hoon, aur government schemes ya calculators tak le ja sakta hoon. Jaise bolo: “future kholo”, “meri net worth batao”, ya “sarkari schemes kholo”.':'I can open LIFEOS sections, estimate net worth and monthly cash flow from your Profile, and take you to schemes and calculators. Try “open future”, “calculate my net worth”, or “open government schemes”.';}
+ else if(q.includes('scheme')||q.includes('ppf')||q.includes('nsc')||q.includes('post office')||q.includes('yojana')||q.includes('योजना')){showSection('investments');answer=hindi?'Government Investment Hub khol diya hai. PPF, NSC jaise options dekho; interest rates aur eligibility badal sakte hain, isliye official source se verify karna.':'I opened the Government Investment Hub. Explore options such as PPF and NSC; rates and eligibility can change, so verify details with the official provider.';}
+ else if(q.includes('stop')||q.includes('chup')||q.includes('band karo')||q.includes('voice band')){gelloStopVoice();answer=hindi?'Theek hai, voice rok di.':'Okay, voice stopped.';}
+ else if(q.includes('thank')){answer=hindi?'Welcome! Jab chaho mic dabakar bolo.':'You’re welcome! Press the mic whenever you want to talk.';}
+ return answer;
+}
+// Future backend integration point: replace this local response function with a secure server request.
+async function gelloSend(){const input=document.getElementById('gello-input');const raw=(input?.value||'').trim();if(!raw)return;input.value='';gelloAdd('user',raw);gelloStatus('Thinking');try{const answer=gelloResponse(raw);gelloAdd('bot',answer);gelloSay(answer);}catch(e){const fallback='Something went wrong. Please try again or type your message.';gelloAdd('bot',fallback);gelloSay(fallback);}}
+function gelloListen(){const mic=document.getElementById('gello-mic');const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){const msg=gelloLanguage()==='hi-IN'?'Is browser mein voice recognition supported nahi hai. Updated Chrome ya Edge use karo, mic permission do, ya message type karo.':'Voice recognition is not supported in this browser. Try an updated Chrome or Edge, allow microphone access, or type your message.';gelloAdd('bot',msg);gelloSay(msg);return;}
+ try{if(gelloRecognition){gelloRecognition.stop();gelloRecognition=null;}if('speechSynthesis' in window)window.speechSynthesis.cancel();gelloRecognition=new SR();gelloRecognition.lang=gelloLanguage();gelloRecognition.interimResults=true;gelloRecognition.maxAlternatives=1;mic.classList.add('listening');mic.textContent='🔴';gelloStatus('Listening');let finalTranscript='';gelloRecognition.onresult=e=>{let interim='';for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)finalTranscript+=t;else interim+=t;}document.getElementById('gello-input').value=finalTranscript||interim;};gelloRecognition.onerror=e=>{if(e.error!=='no-speech'&&e.error!=='aborted'){gelloAdd('bot',(gelloLanguage()==='hi-IN'?'Mic access mein dikkat: ':'Microphone issue: ')+e.error+'. Check browser permissions.');gelloStatus('Microphone issue');}};gelloRecognition.onend=()=>{mic.classList.remove('listening');mic.textContent='🎙️';gelloRecognition=null;const input=document.getElementById('gello-input');if(input?.value.trim())gelloSend();else gelloStatus('Ready to talk');};gelloRecognition.start();}catch(e){mic.classList.remove('listening');mic.textContent='🎙️';gelloStatus('Ready to talk');gelloAdd('bot','Could not start voice input. Check microphone permission and try again.');}}
+
+
+/* INITIAL LOAD */
+
+const initialSection = window.location.hash ? window.location.hash.substring(1) : 'dashboard';
+const validSections = ['dashboard','profile','future','whatif','business','goals','family','stress','debt','fire','compare','investments','tools'];
+showSection(validSections.includes(initialSection) ? initialSection : 'dashboard');
+createTimeline();
+renderSchemes();
+
+document.getElementById("netWorth").innerText=
+    money(value("savings")-value("totalDebt"));
+
+document.getElementById("monthlyFlow").innerText=
+    money(value("income")-value("expense"));
+
+</script>
+
+
+<script>
+/* LIFEOS X backend bridge: Flask API + SQLite persistence */
+(() => {
+  const API = '/api/state';
+  const editable = () => Array.from(document.querySelectorAll('input[id], select[id], textarea[id]'))
+    .filter(el => !['gello-input'].includes(el.id) && el.type !== 'button' && el.type !== 'submit');
+  let saveTimer = null;
+  let loading = true;
+  const getState = () => {
+    const state = {};
+    editable().forEach(el => {
+      if (el.type === 'checkbox') state[el.id] = el.checked;
+      else if (el.type === 'radio') { if (el.checked) state[el.id] = el.value; }
+      else state[el.id] = el.value;
+    });
+    return state;
+  };
+  async function loadState() {
+    try {
+      const response = await fetch(API);
+      if (!response.ok) throw new Error('Backend did not return saved state');
+      const payload = await response.json();
+      const state = payload.state || {};
+      editable().forEach(el => {
+        if (!(el.id in state)) return;
+        if (el.type === 'checkbox') el.checked = Boolean(state[el.id]);
+        else if (el.type === 'radio') el.checked = el.value === String(state[el.id]);
+        else el.value = state[el.id] ?? '';
+      });
+      if (typeof updateProfile === 'function') updateProfile();
+      if (typeof createTimeline === 'function') createTimeline();
+      if (typeof renderSchemes === 'function') renderSchemes();
+      const nw = document.getElementById('netWorth');
+      const flow = document.getElementById('monthlyFlow');
+      if (nw && typeof money === 'function' && typeof value === 'function') nw.innerText = money(value('savings') - value('totalDebt'));
+      if (flow && typeof money === 'function' && typeof value === 'function') flow.innerText = money(value('income') - value('expense'));
+      document.documentElement.dataset.backend = 'connected';
+      const status = document.getElementById('statusText');
+      if (status) status.title = 'Connected to Flask + SQLite backend';
+    } catch (err) {
+      console.warn('LIFEOS X backend is unavailable:', err);
+      document.documentElement.dataset.backend = 'offline';
+    } finally { loading = false; }
+  }
+  async function saveState() {
+    if (loading) return;
+    try {
+      const response = await fetch(API, {
+        method: 'PUT', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({state: getState()})
+      });
+      if (!response.ok) throw new Error('Save failed');
+      document.documentElement.dataset.backend = 'connected';
+    } catch (err) {
+      console.warn('Could not save LIFEOS X data:', err);
+      document.documentElement.dataset.backend = 'offline';
+    }
+  }
+  document.addEventListener('input', event => {
+    if (event.target.matches('input[id], textarea[id]')) {
+      clearTimeout(saveTimer); saveTimer = setTimeout(saveState, 500);
+    }
+  });
+  document.addEventListener('change', event => {
+    if (event.target.matches('input[id], select[id], textarea[id]')) {
+      clearTimeout(saveTimer); saveTimer = setTimeout(saveState, 200);
+    }
+  });
+  window.LIFEOSBackend = { loadState, saveState, getState };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadState);
+  else loadState();
+})();
+</script>
+
+</body>
+</html>
